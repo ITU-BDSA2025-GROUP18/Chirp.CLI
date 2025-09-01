@@ -42,16 +42,19 @@ void cheep()
 {
     if (args.Length < 2)
     {
-        Console.WriteLine("Wrong syntax -- \"cheep\"-argument needs to be followed up with a message");
+        Console.WriteLine("Wrong syntax -- \"cheep\"-argument needs to be followed by a message");
         return;
     }
 
     string author = Environment.UserName;
     string message = args[1];
-    string timestamp = DateTimeOffset.UtcNow.ToString();
+    string utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 
-    Console.WriteLine(author + " @ " + timestamp + ": " + message);
-    //WIP
+    string line = author + ",\"" + message + "\"," + utcTimestamp;
+
+    StreamWriter sw = File.AppendText("chirp_cli_db.csv");
+    sw.Write(line);
+    sw.Close();
 }
 
 //Koden nedenfor er basically vores main
