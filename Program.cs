@@ -11,7 +11,7 @@ void read()
     StreamReader reader = new StreamReader(filepath);
 
     reader.ReadLine(); //Skipper første linje i filen: "Author,Message,Timestamp", da denne ikke er en besked
-    
+
     while (!reader.EndOfStream)
     {
         string[] line = reader.ReadLine()!.Split(",");
@@ -24,17 +24,17 @@ void read()
             sb.Append(line[i]);
             if (i < line.Length - 2) sb.Append(",");
         }
+
         sb.Replace("\"", ""); //Formatterer beskeden rigtigt
         string message = sb.ToString();
 
-        long unixTimestamp = long.Parse(line[line.Length-1]);
+        long unixTimestamp = long.Parse(line[line.Length - 1]);
         string timestamp = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).LocalDateTime.ToString();
 
-        Console.WriteLine(author +" @ "+ timestamp +": "+ message);
+        Console.WriteLine(author + " @ " + timestamp + ": " + message);
 
         Thread.Sleep(1000);
     }
-
 }
 
 //Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
@@ -59,6 +59,5 @@ void cheep()
 
 //Koden nedenfor er basically vores main
 if (args.Length < 1) Console.WriteLine("Invalid argument(s)");
-
 if (args[0] == "read") read();
 else if (args[0] == "cheep") cheep();
