@@ -53,7 +53,7 @@ void cheep()
     string line = author + ",\"" + message + "\"," + utcTimestamp;
 
     StreamWriter sw = File.AppendText("chirp_cli_db.csv");
-    sw.Write(line);
+    sw.WriteLine(line);
     sw.Close();
 }
 
