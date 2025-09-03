@@ -5,12 +5,6 @@ using System.Text;
 
 public class Program
 {
-    public static void main(string[] args)
-    {
-        if (args.Length< 1) Console.WriteLine("Invalid argument(s)");
-        if (args[0] == "read") read();
-        else if (args[0] == "cheep") cheep();
-    }
     // Læser alle beskeder fra chirp_cli_db.csv-filen. Bemærk dag/måned er omvendt af Eduards på GitHub...
     void read()
     {
