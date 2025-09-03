@@ -1,7 +1,6 @@
 using System.Globalization;
 using Chirp.CLI;
 using CsvHelper;
-using CsvHelper.Configuration;
 
 public class UserInterface : Program
 {
@@ -17,7 +16,17 @@ public class UserInterface : Program
     {
         foreach (var cheep in ReadCheaps())
         {
-            Console.WriteLine(cheep);
+            writeRecordToConsole(cheep);
         }
+    }
+
+    static void writeRecordToConsole(Cheep record)
+    {
+        var formattedTimeStamp = DateTimeOffset
+            .FromUnixTimeSeconds(record.Timestamp)
+            .LocalDateTime
+            .ToString(CultureInfo.InvariantCulture);
+
+        Console.WriteLine($"{record.Author} @ {formattedTimeStamp}: {record.Message}");  
     }
 }

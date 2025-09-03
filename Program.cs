@@ -3,10 +3,14 @@ using Chirp.CLI;
 using CsvHelper;
 
 public class Program
+
 {
     public static void Main(string[] args)
     {
+        var UI = new UserInterface();
+        
         if (args.Length < 1) Console.WriteLine("Invalid argument(s)");
+        if (args[0] == "read") UI.PrintCheeps();
         if (args[0] == "cheep") cheep(args);
     }
 
