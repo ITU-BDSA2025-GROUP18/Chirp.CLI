@@ -38,10 +38,11 @@ void cheep()
     
     var record = new Cheep(author, message, utcTimestamp);
     
-    using (var writer = new StreamWriter("chirp_cli_db.csv"))
+    using (var writer = new StreamWriter("chirp_cli_db.csv", append: true))
     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
     {
         csv.WriteRecord(record);
+        writer.WriteLine();
     }
 }
 
