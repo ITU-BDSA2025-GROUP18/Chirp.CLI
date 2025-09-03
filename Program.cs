@@ -1,48 +1,26 @@
 ﻿using System.Globalization;
-using System.Text;
 using Chirp.CLI;
 using CsvHelper;
-using CsvHelper.Configuration;
 
 // Læser alle beskeder fra chirp_cli_db.csv-filen. Bemærk dag/måned er omvendt af Eduards på GitHub...
 void read()
 {
-
-    var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-    {
-        NewLine = Environment.NewLine,
-    };
     using (var reader = new StreamReader("chirp_cli_db.csv"))
     using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
     {
         var records = csv.GetRecords<Cheep>();
-    };
-
-/*
-    while (!reader.EndOfStream)
-    {
-        string[] line = reader.ReadLine()!.Split(",");
-
-        string author = line[0];
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < line.Length - 1; i++)
-        {
-            sb.Append(line[i]);
-            if (i < line.Length - 2) sb.Append(",");
-        }
-
-        sb.Replace("\"", ""); //Formatterer beskeden rigtigt
-        string message = sb.ToString();
-
-        long unixTimestamp = long.Parse(line[line.Length - 1]);
-        string timestamp = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).LocalDateTime.ToString();
-
-        Console.WriteLine(author + " @ " + timestamp + ": " + message);
-
-        Thread.Sleep(1000);
+        records.ToList().ForEach(record => writeRecordToConsole(record));
     }
-    */
+}
+
+void writeRecordToConsole(Cheep record)
+{
+    var formattedTimeStamp = DateTimeOffset
+        .FromUnixTimeSeconds(record.Timestamp)
+        .LocalDateTime
+        .ToString(CultureInfo.InvariantCulture);
+    Console.WriteLine(record.Author + " @ " + formattedTimeStamp + " " + record.Message);
+    Thread.Sleep(1000);
 }
 
 //Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
