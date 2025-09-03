@@ -1,17 +1,24 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization;
+﻿using System.Globalization;
 using System.Text;
+using Chirp.CLI;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 // Læser alle beskeder fra chirp_cli_db.csv-filen. Bemærk dag/måned er omvendt af Eduards på GitHub...
 void read()
 {
-    string filepath = "chirp_cli_db.csv";
 
-    StreamReader reader = new StreamReader(filepath);
+    var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+    {
+        NewLine = Environment.NewLine,
+    };
+    using (var reader = new StreamReader("chirp_cli_db.csv"))
+    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+    {
+        var records = csv.GetRecords<Cheep>();
+    };
 
-    reader.ReadLine(); //Skipper første linje i filen: "Author,Message,Timestamp", da denne ikke er en besked
-
+/*
     while (!reader.EndOfStream)
     {
         string[] line = reader.ReadLine()!.Split(",");
@@ -35,6 +42,7 @@ void read()
 
         Thread.Sleep(1000);
     }
+    */
 }
 
 //Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
