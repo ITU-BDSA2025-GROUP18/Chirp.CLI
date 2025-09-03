@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Text;
 
 public class Program
 {
     // Læser alle beskeder fra chirp_cli_db.csv-filen. Bemærk dag/måned er omvendt af Eduards på GitHub...
-    void read()
+    protected static void read()
     {
         string filepath = "chirp_cli_db.csv";
 
@@ -40,7 +37,7 @@ public class Program
     }
 
     //Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
-    void cheep()
+    protected static void cheep(string[] args)
     {
         if (args.Length < 2)
         {
