@@ -34,13 +34,15 @@ void cheep()
 
     string author = Environment.UserName;
     string message = args[1];
-    string utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-
-    string line = author + ",\"" + message + "\"," + utcTimestamp;
-
-    StreamWriter sw = File.AppendText("chirp_cli_db.csv");
-    sw.WriteLine(line);
-    sw.Close();
+    long utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    
+    var record = new Cheep(author, message, utcTimestamp);
+    
+    using (var writer = new StreamWriter("chirp_cli_db.csv"))
+    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+    {
+        csv.WriteRecord(record);
+    }
 }
 
 //Koden nedenfor er basically vores main
