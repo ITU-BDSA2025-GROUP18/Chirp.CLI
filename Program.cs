@@ -1,58 +1,52 @@
-﻿using System.Text;
+using System.Globalization;
+using Chirp.CLI;
+using CsvHelper;
 
-public class Program
+// Læser alle beskeder fra chirp_cli_db.csv-filen. Bemærk dag/måned er omvendt af Eduards på GitHub...
+void read()
 {
-    // Læser alle beskeder fra chirp_cli_db.csv-filen. Bemærk dag/måned er omvendt af Eduards på GitHub...
-    protected static void read()
+    using (var reader = new StreamReader("chirp_cli_db.csv"))
+    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
     {
-        string filepath = "chirp_cli_db.csv";
-
-        StreamReader reader = new StreamReader(filepath);
-
-        reader.ReadLine(); //Skipper første linje i filen: "Author,Message,Timestamp", da denne ikke er en besked
-
-        while (!reader.EndOfStream)
-        {
-            string[] line = reader.ReadLine()!.Split(",");
-
-            string author = line[0];
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 1; i < line.Length - 1; i++)
-            {
-                sb.Append(line[i]);
-                if (i < line.Length - 2) sb.Append(",");
-            }
-
-            sb.Replace("\"", ""); //Formatterer beskeden rigtigt
-            string message = sb.ToString();
-
-            long unixTimestamp = long.Parse(line[line.Length - 1]);
-            string timestamp = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).LocalDateTime.ToString();
-
-            Console.WriteLine(author + " @ " + timestamp + ": " + message);
-
-            Thread.Sleep(1000);
-        }
-    }
-
-    //Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
-    protected static void cheep(string[] args)
-    {
-        if (args.Length < 2)
-        {
-            Console.WriteLine("Wrong syntax -- \"cheep\"-argument needs to be followed by a message");
-            return;
-        }
-
-        string author = Environment.UserName;
-        string message = args[1];
-        string utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-
-        string line = author + ",\"" + message + "\"," + utcTimestamp;
-
-        StreamWriter sw = File.AppendText("chirp_cli_db.csv");
-        sw.WriteLine(line);
-        sw.Close();
+        var records = csv.GetRecords<Cheep>();
+        records.ToList().ForEach(record => writeRecordToConsole(record));
     }
 }
+
+void writeRecordToConsole(Cheep record)
+{
+    var formattedTimeStamp = DateTimeOffset
+        .FromUnixTimeSeconds(record.Timestamp)
+        .LocalDateTime
+        .ToString(CultureInfo.InvariantCulture);
+    Console.WriteLine(record.Author + " @ " + formattedTimeStamp + " " + record.Message);
+    Thread.Sleep(1000);
+}
+
+//Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
+void cheep()
+{
+    if (args.Length < 2)
+    {
+        Console.WriteLine("Wrong syntax -- \"cheep\"-argument needs to be followed by a message");
+        return;
+    }
+
+    string author = Environment.UserName;
+    string message = args[1];
+    long utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    
+    var record = new Cheep(author, message, utcTimestamp);
+    
+    using (var writer = new StreamWriter("chirp_cli_db.csv", append: true))
+    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+    {
+        csv.WriteRecord(record);
+        writer.WriteLine();
+    }
+}
+
+//Koden nedenfor er basically vores main
+if (args.Length < 1) Console.WriteLine("Invalid argument(s)");
+if (args[0] == "read") read();
+else if (args[0] == "cheep") cheep();

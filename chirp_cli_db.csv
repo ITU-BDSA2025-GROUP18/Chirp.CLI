@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Author,Message,Timestamp
 ropf,"Hello, BDSA students!",1690891760
 adho,"Welcome to the course!",1690978778
@@ -6,3 +7,8 @@ ropf,"Cheeping cheeps on Chirp :)",1690981487
 oliv7,"Hello, world!",1756729648
 vince,"Ej Oliver, det er rigtig godt arbejde det her :D. *cheep* ^-^",1756843372
 caspe,"Hej, pls virk nu pls pls",1756903212
+=======
+sander,testing csvHelper2,1756903990
+sander,testing csvHelper3,1756904158
+sander,testing csvHelper4,1756904171
+>>>>>>> main
