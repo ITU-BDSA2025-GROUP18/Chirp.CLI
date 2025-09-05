@@ -4,7 +4,7 @@ using CsvHelper;
 
 public class UserInterface : Program
 {
-    //Function that writes out all cheeps from the crip_cli_db.csv file
+    //Function that gets all cheeps from the crip_cli_db.csv file
     public IEnumerable<Cheep> ReadCheaps() {
         using (var reader = new StreamReader("chirp_cli_db.csv"))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture)) 
@@ -12,6 +12,7 @@ public class UserInterface : Program
             return csv.GetRecords<Cheep>().ToList();
     }
 
+    //Function that writes out all cheeps in console
     public void PrintCheeps()
     {
         foreach (var cheep in ReadCheaps())
@@ -19,7 +20,8 @@ public class UserInterface : Program
             writeRecordToConsole(cheep);
         }
     }
-
+    
+    //Function that writes out a cheep in console.
     static void writeRecordToConsole(Cheep record)
     {
         var formattedTimeStamp = DateTimeOffset
