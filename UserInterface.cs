@@ -13,7 +13,7 @@ public class UserInterface : Program
     }
 
     //Function that writes out all cheeps in console
-    public void PrintCheeps()
+    public static void PrintCheeps()
     {
         foreach (var cheep in ReadCheeps())
         {
