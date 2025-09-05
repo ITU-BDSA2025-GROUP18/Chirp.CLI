@@ -37,7 +37,7 @@ public class Program
         return 0;
     }
 
-    //Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
+    //Tilføjer en besked til chirp_cli_db.csv, inkl. user og tidspunkt
     static void cheep(string message)
     {
         string author = Environment.UserName;
