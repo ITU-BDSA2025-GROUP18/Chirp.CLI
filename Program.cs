@@ -1,30 +1,46 @@
-using System.Globalization;
+﻿using System.Globalization;
+using System.CommandLine;
+using System.CommandLine.Parsing;
 using Chirp.CLI;
 using CsvHelper;
 
 public class Program
 
 {
-    public static void Main(string[] args)
+    public static int Main(string[] args)
     {
         var UI = new UserInterface();
-        
-        if (args.Length < 1) Console.WriteLine("Invalid argument(s)");
-        if (args[0] == "read") UI.PrintCheeps();
-        if (args[0] == "cheep") cheep(args);
-    }
 
-//Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
-    static void cheep(string[] args)
-    {
-        if (args.Length < 2)
+        RootCommand rootCommand = new RootCommand("Chirp command line interface");
+
+        Command readCommand = new Command("read", "Read messages in the database");
+        rootCommand.Add(readCommand);
+
+        Command cheepCommand = new Command("cheep", "Send a message to the database");
+        Argument<string> cheepArg = new Argument<string>("Message that'll be sent to the database");
+        cheepCommand.Add(cheepArg);
+        rootCommand.Add(cheepCommand);
+
+        ParseResult parseResult = rootCommand.Parse(args);
+        if (parseResult.Errors.Count > 0)
         {
-            Console.WriteLine("Wrong syntax -- \"cheep\"-argument needs to be followed by a message");
-            return;
+            foreach (ParseError parseError in parseResult.Errors)
+            {
+                Console.Error.WriteLine(parseError.Message);
+            }
+            return 1;
         }
 
+        if (parseResult.GetResult(readCommand) != null) UI.PrintCheeps();
+        if (parseResult.GetResult(cheepCommand)?.GetValue<string>(cheepArg) is string message) cheep(message);
+
+        return 0;
+    }
+
+    //Work in progress. Skal kunne tilføje en besked til chirp_cli_db.csv med user og tidspunkt korrekt angivet
+    static void cheep(string message)
+    {
         string author = Environment.UserName;
-        string message = args[1];
         long utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
         var record = new Cheep(author, message, utcTimestamp);
