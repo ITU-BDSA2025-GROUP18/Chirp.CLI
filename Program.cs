@@ -1,12 +1,18 @@
 ﻿using System.Globalization;
 using System.CommandLine;
-using Chirp.CLI;
 using CsvHelper;
+using SimpleDB;
 
 public class Program
 {
     public static int Main(string[] args)
     {
+        var dataPath = "chirp_cli_db.csv";
+        var database = new CSVDatabase<Cheep<string>>(dataPath);
+
+        var author = Environment.UserName;
+        var utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
         var rootCommand = new RootCommand("Chirp command line interface");
         var readCommand = new Command("read", "Read messages in the database");
         rootCommand.Add(readCommand);
@@ -23,26 +29,14 @@ public class Program
             {
                 Console.Error.WriteLine(parseError.Message);
             }
+
             return 1;
         }
 
-        if (parseResult.GetResult(readCommand) != null) UserInterface.PrintCheeps();
-        if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message) Cheep(message);
+        if (parseResult.GetResult(readCommand) != null) UserInterface.PrintCheeps(database.Read(20));
+        if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
+            database.Store(new Cheep<string>(author, message, utcTimestamp));
 
         return 0;
-    }
-
-    //Tilføjer en besked til chirp_cli_db.csv, inkl. user og tidspunkt
-    private static void Cheep(string message)
-    {
-        var author = Environment.UserName;
-        var utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-        var record = new Cheep(author, message, utcTimestamp);
-
-        using var writer = new StreamWriter("chirp_cli_db.csv", append: true);
-        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-        csv.WriteRecord(record);
-        writer.WriteLine();
     }
 }
