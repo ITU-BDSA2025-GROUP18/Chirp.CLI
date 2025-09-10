@@ -15,7 +15,7 @@ public sealed class CSVDatabase<T>(string path) : IDatabaseRepository<T> //Seale
 
         if (limit == null) return records;
         if (limit < 0) throw new ArgumentException("limit must be positive");
-        if (limit > n) throw new ArgumentException($"limit must be less than DB-entry size ({n})");
+        if (limit > n) limit = n;
         
         return records.GetRange(0, limit.Value);
 
