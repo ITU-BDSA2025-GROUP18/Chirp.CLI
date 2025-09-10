@@ -15,9 +15,6 @@ public class Controller
 
     public int Run(string[] args)
     {
-        var author = Environment.UserName;
-        var utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
         var rootCommand = new RootCommand("Chirp command line interface");
         var readCommand = new Command("read", "Read messages in the database");
         var readArgument = new Argument<int?>("readAmount");
@@ -47,7 +44,12 @@ public class Controller
         }
 
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
+        {
+            var author = Environment.UserName;
+            var utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            
             _database.Store(new Cheep<string>(author, message, utcTimestamp));
+        }
 
         return 0;
     }
