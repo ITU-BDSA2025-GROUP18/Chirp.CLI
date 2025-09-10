@@ -5,7 +5,7 @@ using SimpleDB;
 public class UserInterface : Program
 {
     //Function that writes out all cheeps in console
-    public static void PrintCheeps(IEnumerable<SimpleDB.Cheep<string>> cheeps)
+    public static void PrintCheeps(IEnumerable<Cheep<string>> cheeps)
     {
         foreach (var cheep in cheeps)
         {
@@ -14,7 +14,7 @@ public class UserInterface : Program
     }
 
     //Function that writes out a cheep in console.
-    private static void WriteRecordToConsole(SimpleDB.Cheep<string> record)
+    private static void WriteRecordToConsole(Cheep<string> record)
     {
         var formattedTimeStamp = DateTimeOffset
             .FromUnixTimeSeconds(record.Timestamp)
