@@ -1,5 +1,4 @@
 using System.Globalization;
-using CsvHelper;
 using SimpleDB;
 
 public class UserInterface : Program

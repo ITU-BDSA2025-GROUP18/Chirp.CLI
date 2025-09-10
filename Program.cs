@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.CommandLine;
-using Chirp.CLI;
-using CsvHelper;
+﻿using Chirp.CLI;
 using SimpleDB;
 
 public class Program
