@@ -3,9 +3,9 @@ using CsvHelper;
 
 namespace SimpleDB;
 
-public sealed class CSVDatabase<T>(string path) : IDatabaseRepository<T> //Sealed modifier prevents subclasses
+public sealed class CSVDatabase<T>(string path) : IDatabaseRepository<T>
 {
-    public IEnumerable<T> Read(int? limit = null) //For at gøre den generic (Fremgået også på billedet
+    public IEnumerable<T> Read(int? limit = null)
     {
         using var reader = new StreamReader(path);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -20,7 +20,7 @@ public sealed class CSVDatabase<T>(string path) : IDatabaseRepository<T> //Seale
         return records.GetRange(0, limit.Value);
     }
 
-    public void Store(T record) //For at gøre den generic (Fremgår også på billedet)
+    public void Store(T record)
     {
         using var writer = new StreamWriter(path, append: true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
