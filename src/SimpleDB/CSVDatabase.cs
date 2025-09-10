@@ -18,11 +18,6 @@ public sealed class CSVDatabase<T>(string path) : IDatabaseRepository<T> //Seale
         if (limit > n) limit = n;
         
         return records.GetRange(0, limit.Value);
-
-        /*if (limit is int temp)
-            return csv.GetRecords<T>().ToList().GetRange(0, temp);
-        else
-            return csv.GetRecords<T>().ToList();*/
     }
 
     public void Store(T record) //For at gøre den generic (Fremgår også på billedet)
