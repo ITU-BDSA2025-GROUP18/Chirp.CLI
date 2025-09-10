@@ -27,15 +27,7 @@ public class Controller
         rootCommand.Add(cheepCommand);
 
         var parseResult = rootCommand.Parse(args);
-        if (parseResult.Errors.Count > 0)
-        {
-            foreach (var parseError in parseResult.Errors)
-            {
-                Console.Error.WriteLine(parseError.Message);
-            }
-
-            return 1;
-        }
+        HandleParseErrors(parseResult);
 
         if (parseResult.GetResult(readCommand) != null)
         {
@@ -52,5 +44,17 @@ public class Controller
         }
 
         return 0;
+    }
+
+    private static void HandleParseErrors(ParseResult parseResult)
+    {
+        if (parseResult.Errors.Count == 0) return;
+
+        foreach (var parseError in parseResult.Errors)
+        {
+            Console.Error.WriteLine(parseError.Message);
+        }
+
+        Environment.Exit(1);
     }
 }
