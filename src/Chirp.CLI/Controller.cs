@@ -1,8 +1,7 @@
 using System.CommandLine;
+using SimpleDB;
 
 namespace Chirp.CLI;
-
-using SimpleDB;
 
 public class Controller
 {
