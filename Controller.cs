@@ -20,7 +20,9 @@ public class Controller
 
         var rootCommand = new RootCommand("Chirp command line interface");
         var readCommand = new Command("read", "Read messages in the database");
-        rootCommand.Add(readCommand);
+        var readArgument = new Argument<int?>("readAmount");
+        readCommand.Arguments.Add(readArgument);
+        rootCommand.Subcommands.Add(readCommand);
 
         var cheepCommand = new Command("cheep", "Send a message to the database");
         var cheepArg = new Argument<string>("Message that'll be sent to the database");
@@ -38,7 +40,12 @@ public class Controller
             return 1;
         }
 
-        if (parseResult.GetResult(readCommand) != null) UserInterface.PrintCheeps(_database.Read(20));
+        if (parseResult.GetResult(readCommand) != null)
+        {
+            var readAmount = parseResult.GetValue<int?>("readAmount");
+            UserInterface.PrintCheeps(_database.Read(readAmount));
+        }
+
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
             _database.Store(new Cheep<string>(author, message, utcTimestamp));
 
