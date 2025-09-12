@@ -16,4 +16,12 @@
     <ProjectReference Include="..\SimpleDB\SimpleDB.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="chirp_cli_db.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="data\chirp_cli_db.csv" />
+  </ItemGroup>
+
 </Project>
