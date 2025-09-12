@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace Chirp.CLI;
 
 public abstract class UserInterface : Program
@@ -9,18 +7,7 @@ public abstract class UserInterface : Program
     {
         foreach (var cheep in cheeps)
         {
-            WriteRecordToConsole(cheep);
+            Console.WriteLine(cheep.ToString());
         }
-    }
-
-    // Function that writes out a cheep in console.
-    private static void WriteRecordToConsole(Cheep<string> record)
-    {
-        var formattedTimeStamp = DateTimeOffset
-            .FromUnixTimeSeconds(record.Timestamp)
-            .LocalDateTime
-            .ToString(CultureInfo.InvariantCulture);
-
-        Console.WriteLine($"{record.Author} @ {formattedTimeStamp}: {record.Message}");
     }
 }
