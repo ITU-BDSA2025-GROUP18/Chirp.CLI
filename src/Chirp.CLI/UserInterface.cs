@@ -1,5 +1,6 @@
 using System.Globalization;
-using SimpleDB;
+
+namespace Chirp.CLI;
 
 public abstract class UserInterface : Program
 {

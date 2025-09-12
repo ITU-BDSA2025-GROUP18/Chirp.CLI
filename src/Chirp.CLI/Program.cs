@@ -1,5 +1,6 @@
-﻿using Chirp.CLI;
-using SimpleDB;
+﻿using SimpleDB;
+
+namespace Chirp.CLI;
 
 public class Program
 {
