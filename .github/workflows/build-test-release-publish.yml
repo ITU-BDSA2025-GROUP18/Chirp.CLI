@@ -4,7 +4,7 @@ run-name: ${{github.actor}} is publishing Release ${{github.ref_name}} 🎉
 on:
   push:
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build:
@@ -67,9 +67,21 @@ jobs:
           7z d "Chirp-${{github.ref_name}}-${{matrix.os}}.zip" "*.pdb" &&
           rm -r "Chirp-${{github.ref_name}}-${{matrix.os}}"
       
+  publish:
+    name: Publish
+    needs: release
+    permissions:
+      contents: write
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        
       - name: Publish
         uses: softprops/action-gh-release@v2
         with:
-          files: "Chirp*"
+          files: "Chirp-*"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
