@@ -1,0 +1,78 @@
+name: Publish
+on:
+  push:
+    #tags:
+    #  - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    name: Build
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.305
+
+      - name: Build
+        run: dotnet build
+
+  test:
+    name: Test
+    needs: build
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.305
+
+      - name: Test
+        run: dotnet test
+
+  release:
+    name: Release
+    needs: test
+
+    strategy:
+      matrix:
+        os: ['linux-arm64', 'linux-x64', 'win-arm64', 'win-x64', 'osx-arm64', 'osx-x64']
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.305
+
+      - name: Build and package executables
+        run:
+          dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r ${{matrix.os}} -p:PublishSingleFile=True --sc false -o "releases/${{github.ref_name}}/${{matrix.os}}" &&
+          7z a "releases/${{github.ref_name}}/${{matrix.os}}.zip" "releases/${{github.ref_name}}/${{matrix.os}}/." &&
+          7z d "releases/${{github.ref_name}}/${{matrix.os}}.zip" "*.pdb" &&
+          rm -rf "releases/${{github.ref_name}}/${{matrix.os}}"
+
+      #- name: Publish
+        #uses: softprops/action-gh-release@v2
+        #with:
+        #  files: "Chirp*"
+        #env:
+        #  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        
+        # 1) Foldere/executables skal zippes op (ekskludér .pdb)
+        # 2) Ikke-zippede foldere slettes
+        # 3) Publish et nyt Release på good ol' GitHub
+        # 4) ???
+        # 5) Profit
+        
