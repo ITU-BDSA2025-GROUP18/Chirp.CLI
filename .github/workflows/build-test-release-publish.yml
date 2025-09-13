@@ -58,7 +58,7 @@ jobs:
         with:
           dotnet-version: 9.0.305
 
-      - name: Build and package executables
+      - name: Build and package executable
         run:
           dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r ${{matrix.os}} -p:PublishSingleFile=True --sc false -o "releases/${{github.ref_name}}/${{matrix.os}}" &&
           7z a "releases/${{github.ref_name}}/${{matrix.os}}.zip" "releases/${{github.ref_name}}/${{matrix.os}}/." &&
