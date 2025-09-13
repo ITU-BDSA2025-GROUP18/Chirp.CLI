@@ -67,6 +67,15 @@ jobs:
           7z d "releases/${{github.ref_name}}/${{matrix.os}}.zip" "*.pdb" &&
           rm -rf "releases/${{github.ref_name}}/${{matrix.os}}"
 
+  publish:
+    name: Publish
+    needs: release
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Publish
         uses: softprops/action-gh-release@v2
         with:
