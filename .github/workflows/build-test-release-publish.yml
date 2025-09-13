@@ -1,8 +1,10 @@
 name: Publish
+run-name: ${{github.actor}} is publishing Release ${{github.ref_name}} 🎉
+
 on:
   push:
-    #tags:
-    #  - 'v[0-9]+.[0-9]+.[0-9]+'
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build:
@@ -63,16 +65,10 @@ jobs:
           7z d "releases/${{github.ref_name}}/${{matrix.os}}.zip" "*.pdb" &&
           rm -rf "releases/${{github.ref_name}}/${{matrix.os}}"
 
-      #- name: Publish
-        #uses: softprops/action-gh-release@v2
-        #with:
-        #  files: "Chirp*"
-        #env:
-        #  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        
-        # 1) Foldere/executables skal zippes op (ekskludér .pdb)
-        # 2) Ikke-zippede foldere slettes
-        # 3) Publish et nyt Release på good ol' GitHub
-        # 4) ???
-        # 5) Profit
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "Chirp*"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         
