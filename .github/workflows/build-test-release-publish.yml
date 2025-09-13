@@ -1,5 +1,8 @@
-name: Publish
-run-name: ${{github.actor}} is publishing Release ${{github.ref_name}} 🎉
+name: Build, Test and Publish
+run-name: ${{ github.actor }} is publishing Release ${{ github.ref_name }} 🎉
+
+permissions:
+  contents: write
 
 on:
   push:
@@ -9,7 +12,7 @@ on:
 jobs:
   build:
     name: Build
-    
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,8 +23,11 @@ jobs:
         with:
           dotnet-version: 9.0.305
 
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Build
-        run: dotnet build
+        run: dotnet build --no-restore
 
   test:
     name: Test
@@ -38,47 +44,52 @@ jobs:
           dotnet-version: 9.0.305
 
       - name: Test
-        run: dotnet test
+        run: dotnet test --no-build
+
+  prep-release:
+    name: Prepare GitHub Release
+    needs: test
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
     name: Release
-    needs: test
-    permissions:
-      contents: write
+    needs: prep-release
 
     strategy:
       matrix:
-        os: ['linux-arm64', 'linux-x64', 'win-arm64', 'win-x64', 'osx-arm64', 'osx-x64']
-    
+        os: ['linux-arm64', 'linux-x64', 'osx-arm64', 'osx-x64', 'win-arm64', 'win-x64']
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Setup dotnet
+      - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 9.0.305
 
-      - name: Build and package executable
-        run:
-          dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r ${{matrix.os}} -p:PublishSingleFile=True --sc false -o "Chirp-${{github.ref_name}}-${{matrix.os}}" &&
-          7z a "Chirp-${{github.ref_name}}-${{matrix.os}}.zip" "Chirp-${{github.ref_name}}-${{matrix.os}}/." &&
-          7z d "Chirp-${{github.ref_name}}-${{matrix.os}}.zip" "*.pdb" &&
-          rm -r "Chirp-${{github.ref_name}}-${{matrix.os}}"
-      
-  publish:
-    name: Publish
-    needs: release
-    permissions:
-      contents: write
-    
-    runs-on: ubuntu-latest
+      - name: Publish and package
+        shell: bash
+        run: |
+          release_name="Chirp-${{ github.ref_name }}-${{ matrix.os }}"
 
-    steps:
-      - name: Publish
+          dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r "${{ matrix.os }}" -o "${release_name}" --sc false -p:PublishSingleFile=True
+
+          7z a "${release_name}.zip" "${release_name}/."
+          7z d "${release_name}.zip" "*.pdb"
+
+          rm -r "${release_name}"
+
+      - name: Populate GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: "Chirp-*"
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
