@@ -24,16 +24,14 @@ public class EndToEndTest2Chirp : IDisposable
 
     public void DoesChirpStoreDataCorrectly()
     /*This will be a test where we check if data is stored correctly into the database.
-    We will test the following message: "Hello!!!" will be stored in the database together with
-    its author and timestamp. 
-    We'll therefore create a new CSVDatabase that points to our temporary file &
-    create a controller that uses our new CSVDatabase  */
+    Test if message: "Hello!!!" will be stored together with author and timestamp. 
+    Create a new CSVDatabase that points to our temporary file &
+    Create a controller that uses our new CSVDatabase*/
     {
-        var db = new CSVDatabase<Cheep<T>>(_dbPath);
+        var db = new CSVDatabase<Cheep<string>>(_dbPath);
         var controller = new Controller(db);
 
-        controller.Run(new[] { "cheep", "Hello!!!" }); /*"cheep" = our keyword for our parser to read
-        "Hello!!!" = message we want to cheep*/
+        controller.Run(new[] { "cheep", "Hello!!!" }); 
         
         //Assertion
         /*First we check that we have our cheep stored. (2 lines because first line
