@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Chirp.CLI;
+namespace Chirp.CSVDBService.Models;
 
 public record Cheep<T>(string Author, T Message, long Timestamp)
 {
