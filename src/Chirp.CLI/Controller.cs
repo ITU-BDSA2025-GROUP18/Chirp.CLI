@@ -1,19 +1,27 @@
 using System.CommandLine;
-using SimpleDB;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace Chirp.CLI;
 
 public class Controller
 {
-    private readonly CSVDatabase<Cheep<string>> _database;
+    private readonly HttpClient _client;
+    private string _baseURL;
 
-    public Controller(CSVDatabase<Cheep<string>> database)
+    public Controller()
     {
-        _database = database;
+        // ---- HTTP ---- //
+        _client = new HttpClient();
+        _baseURL = "https://bdsagroup18chirpremotedb-b7fcdvashugchmcj.germanywestcentral-01.azurewebsites.net/";
+        _client.DefaultRequestHeaders.Accept.Clear();
+        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _client.BaseAddress = new Uri(_baseURL);
     }
 
-    public int Run(string[] args)
+    public async Task<int> Run(string[] args)
     {
+        // ---- COMMANDS ---- //
         var rootCommand = new RootCommand("Chirp command line interface");
         var readCommand = new Command("read", "Read messages in the database");
         var readArgument = new Argument<int?>("readAmount");
@@ -31,18 +39,40 @@ public class Controller
         if (parseResult.GetResult(readCommand) != null)
         {
             var readAmount = parseResult.GetValue<int?>("readAmount");
-            UserInterface.PrintCheeps(_database.Read(readAmount));
+            await ReadCheepsFromCsvdbService(readAmount);
         }
 
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
         {
             var author = Environment.UserName;
             var utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            
-            _database.Store(new Cheep<string>(author, message, utcTimestamp));
+
+            var cheep = new Cheep<string>(author, message, utcTimestamp);
+            await PostCheepToCsvdbService(cheep);
         }
 
         return 0;
+    }
+
+    private async Task ReadCheepsFromCsvdbService(int? limit = null)
+    {
+        var url = limit.HasValue
+            ? $"cheeps?limit={limit.Value}"
+            : "cheeps";
+        var cheeps = await _client.GetFromJsonAsync<List<Cheep<string>>>(url);
+        if (cheeps != null)
+        {
+            await UserInterface<Cheep<string>>.PrintCheeps(cheeps);
+        }
+        else
+        {
+            throw new Exception("No cheeps found");
+        }
+    }
+
+    private async Task PostCheepToCsvdbService(Cheep<string> cheep)
+    {
+        await _client.PostAsJsonAsync("cheep", cheep);
     }
 
     private static void HandleParseErrors(ParseResult parseResult)

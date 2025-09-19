@@ -1,10 +1,12 @@
-using System.Globalization;
+﻿using System.Globalization;
 using CsvHelper;
 
-namespace SimpleDB;
+namespace Chirp.CSVDBService.Controllers;
 
-public sealed class CSVDatabase<T>(string path) : IDatabaseRepository<T>
+public class CheepRepository<T>
 {
+    const string path = "Data/chirp_cli_db.csv";
+    
     public IEnumerable<T> Read(int? limit = null)
     {
         using var reader = new StreamReader(path);
@@ -19,7 +21,7 @@ public sealed class CSVDatabase<T>(string path) : IDatabaseRepository<T>
         
         return records.GetRange(0, limit.Value);
     }
-
+    
     public void Store(T record)
     {
         using var writer = new StreamWriter(path, append: true);
