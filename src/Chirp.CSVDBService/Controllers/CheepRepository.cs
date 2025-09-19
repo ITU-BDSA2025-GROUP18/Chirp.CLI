@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using CsvHelper;
 
-namespace Chirp.CSVDBService;
+namespace Chirp.CSVDBService.Controllers;
 
-public class CheepRepository
+public abstract class CheepRepository
 {
 
     public IEnumerable<T> Read(int? limit = null)

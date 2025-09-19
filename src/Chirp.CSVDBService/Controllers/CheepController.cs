@@ -1,4 +1,6 @@
-﻿namespace Chirp.CSVDBService;
+﻿using Chirp.CSVDBService.Controllers;
+
+namespace Chirp.CSVDBService;
 
 public class CheepController
 {
