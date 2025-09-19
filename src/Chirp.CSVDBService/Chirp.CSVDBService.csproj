@@ -11,9 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\*.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Data\chirp_cli_db.csv" />
   </ItemGroup>
 
 </Project>
