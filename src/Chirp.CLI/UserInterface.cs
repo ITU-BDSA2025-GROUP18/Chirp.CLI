@@ -7,7 +7,7 @@ public abstract class UserInterface<T> : Program
     {
         foreach (var cheep in cheeps)
         {
-            Console.WriteLine(cheep.ToString());
+            Console.WriteLine(cheep);
         }
 
         return Task.CompletedTask;
