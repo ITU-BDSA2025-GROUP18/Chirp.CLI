@@ -39,7 +39,7 @@ public class Controller
         if (parseResult.GetResult(readCommand) != null)
         {
             var readAmount = parseResult.GetValue<int?>("readAmount");
-            await ReadCheepsFromCSVDBService(readAmount);
+            await ReadCheepsFromCsvdbService(readAmount);
         }
 
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
@@ -47,13 +47,14 @@ public class Controller
             var author = Environment.UserName;
             var utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            //new Cheep<string>(author, message, utcTimestamp);
+            var cheep = new Cheep<string>(author, message, utcTimestamp);
+            await PostCheepToCsvdbService(cheep);
         }
 
         return 0;
     }
 
-    async Task ReadCheepsFromCSVDBService(int? limit = null)
+    private async Task ReadCheepsFromCsvdbService(int? limit = null)
     {
         var url = limit.HasValue
             ? $"cheeps?limit={limit.Value}"
@@ -67,6 +68,11 @@ public class Controller
         {
             throw new Exception("No cheeps found");
         }
+    }
+
+    private async Task PostCheepToCsvdbService(Cheep<string> cheep)
+    {
+        await _client.PostAsJsonAsync("cheep", cheep);
     }
 
     private static void HandleParseErrors(ParseResult parseResult)
