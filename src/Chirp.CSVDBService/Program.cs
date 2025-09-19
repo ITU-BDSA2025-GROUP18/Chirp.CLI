@@ -1,6 +1,9 @@
+using Chirp.CSVDBService;
+using Chirp.CSVDBService.Models;
+
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
-
-app.MapGet("/cheeps", () => new Cheep("me", "Hej!", 1684229348));
+var _ = new CheepController(app);
 
 app.Run();
