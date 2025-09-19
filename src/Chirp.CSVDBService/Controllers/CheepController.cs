@@ -2,9 +2,14 @@
 
 public class CheepController
 {
-    public CheepController(WebApplication app)
+    
+    public CheepController(WebApplication app, CheepRepository repository)
     {
         /// ======== GET ======== ///
-        app.MapGet("/cheep", () => "Cheep");
+        
+        // Get all cheeps 
+        app.MapGet("/cheeps", (int? limit=null) => repository.Read(limit));
+        
+        
     }
 }
