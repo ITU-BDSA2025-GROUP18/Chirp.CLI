@@ -1,17 +1,9 @@
-/*using System.CommandLine;
-using SimpleDB;
+using System.CommandLine;
 
 namespace Chirp.CLI;
 
 public class Controller
 {
-    private readonly CSVDatabase<Cheep<string>> _database;
-
-    public Controller(CSVDatabase<Cheep<string>> database)
-    {
-        _database = database;
-    }
-
     public int Run(string[] args)
     {
         var rootCommand = new RootCommand("Chirp command line interface");
@@ -31,15 +23,15 @@ public class Controller
         if (parseResult.GetResult(readCommand) != null)
         {
             var readAmount = parseResult.GetValue<int?>("readAmount");
-            UserInterface.PrintCheeps(_database.Read(readAmount));
+            // READ CHEEPS
         }
 
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
         {
             var author = Environment.UserName;
             var utcTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            
-            _database.Store(new Cheep<string>(author, message, utcTimestamp));
+
+            //new Cheep<string>(author, message, utcTimestamp);
         }
 
         return 0;
@@ -56,4 +48,4 @@ public class Controller
 
         Environment.Exit(1);
     }
-}*/
+}
