@@ -1,13 +1,20 @@
 using System.CommandLine;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace Chirp.CLI;
 
 public class Controller
 {
+    private readonly HttpClient _client = new();
+
     public int Run(string[] args)
     {
         // ---- HTTP ---- //
-
+        var baseURL = "http://localhost:5012";
+        _client.DefaultRequestHeaders.Accept.Clear();
+        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _client.BaseAddress = new Uri(baseURL);
 
         // ---- COMMANDS ---- //
         var rootCommand = new RootCommand("Chirp command line interface");
@@ -28,7 +35,8 @@ public class Controller
         {
             var readAmount = parseResult.GetValue<int?>("readAmount");
             // READ CHEEPS
-            UserInterface.PrintCheeps
+
+            UserInterface<Cheep<string>>.PrintCheeps(ReadCheeps(readAmount));
         }
 
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
@@ -40,6 +48,12 @@ public class Controller
         }
 
         return 0;
+    }
+
+    async IAsyncEnumerable<Cheep<string>> ReadCheeps(int? limit = null)
+    {
+        var cheeps = await _client.GetFromJsonAsync<Cheep<string>>($"cheeps?limit={limit}");
+        yield return cheeps;
     }
 
     private static void HandleParseErrors(ParseResult parseResult)
