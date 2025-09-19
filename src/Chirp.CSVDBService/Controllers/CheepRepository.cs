@@ -3,11 +3,12 @@ using CsvHelper;
 
 namespace Chirp.CSVDBService.Controllers;
 
-public abstract class CheepRepository
+public class CheepRepository
 {
-
     public IEnumerable<T> Read(int? limit = null)
     {
+        const string path = "../Data/CheepRepository.csv";
+        
         using var reader = new StreamReader(path);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
