@@ -24,6 +24,7 @@ public class Controller
         {
             var readAmount = parseResult.GetValue<int?>("readAmount");
             // READ CHEEPS
+            UserInterface.PrintCheeps
         }
 
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
