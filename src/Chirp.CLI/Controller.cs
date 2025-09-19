@@ -13,7 +13,7 @@ public class Controller
     {
         // ---- HTTP ---- //
         _client = new HttpClient();
-        _baseURL = "http://localhost:5135";
+        _baseURL = "https://bdsagroup18chirpremotedb-b7fcdvashugchmcj.germanywestcentral-01.azurewebsites.net/";
         _client.DefaultRequestHeaders.Accept.Clear();
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         _client.BaseAddress = new Uri(_baseURL);
