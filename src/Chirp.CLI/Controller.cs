@@ -6,6 +6,10 @@ public class Controller
 {
     public int Run(string[] args)
     {
+        // ---- HTTP ---- //
+
+
+        // ---- COMMANDS ---- //
         var rootCommand = new RootCommand("Chirp command line interface");
         var readCommand = new Command("read", "Read messages in the database");
         var readArgument = new Argument<int?>("readAmount");
