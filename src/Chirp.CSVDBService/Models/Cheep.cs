@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace Chirp.CSVDBService.Models;
 
-public record Cheep<T>(string Author, T Message, long Timestamp)
+public abstract record Cheep<T>(string Author, T Message, long Timestamp)
 {
     public override string ToString()
     {

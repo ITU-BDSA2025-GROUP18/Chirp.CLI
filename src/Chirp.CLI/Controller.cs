@@ -1,9 +1,9 @@
-using System.CommandLine;
+/*using System.CommandLine;
 using SimpleDB;
 
 namespace Chirp.CLI;
 
-/*public class Controller
+public class Controller
 {
     private readonly CSVDatabase<Cheep<string>> _database;
 
