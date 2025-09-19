@@ -3,7 +3,7 @@ using CsvHelper;
 
 namespace Chirp.CSVDBService.Controllers;
 
-public class CheepRepository
+public class CheepRepository<T>
 {
     public IEnumerable<T> Read(int? limit = null)
     {

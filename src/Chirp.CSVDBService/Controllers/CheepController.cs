@@ -1,11 +1,12 @@
 ﻿using Chirp.CSVDBService.Controllers;
+using Chirp.CSVDBService.Models;
 
 namespace Chirp.CSVDBService;
 
 public class CheepController
 {
     
-    public CheepController(WebApplication app, CheepRepository repository)
+    public CheepController(WebApplication app, CheepRepository<Cheep<string>> repository)
     {
         /// ======== GET ======== ///
         
