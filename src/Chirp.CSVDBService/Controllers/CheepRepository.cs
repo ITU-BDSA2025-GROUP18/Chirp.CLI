@@ -5,10 +5,10 @@ namespace Chirp.CSVDBService.Controllers;
 
 public class CheepRepository<T>
 {
+    const string path = "Data/chirp_cli_db.csv";
+    
     public IEnumerable<T> Read(int? limit = null)
     {
-        const string path = "Data/chirp_cli_db.csv";
-        
         using var reader = new StreamReader(path);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 

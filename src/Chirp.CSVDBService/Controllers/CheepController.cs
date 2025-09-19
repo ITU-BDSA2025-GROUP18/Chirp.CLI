@@ -15,6 +15,8 @@ public class CheepController
         
         
         /// ======== POST ======== ///
-        app.MapPost("/cheep", (Cheep cheep) => repository.Store(cheep))
+        
+        // Post a cheep
+        app.MapPost("/cheep", (Cheep<string> cheep) => repository.Store(cheep));
     }
 }
