@@ -20,8 +20,4 @@
     <None Remove="chirp_cli_db.csv" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="data\chirp_cli_db.csv" />
-  </ItemGroup>
-
 </Project>

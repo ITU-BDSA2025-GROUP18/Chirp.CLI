@@ -1,4 +1,7 @@
-﻿namespace Chirp.CSVDBService;
+﻿using System.Globalization;
+using CsvHelper;
+
+namespace Chirp.CSVDBService;
 
 public class CheepRepository
 {
