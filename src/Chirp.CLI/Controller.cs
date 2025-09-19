@@ -6,16 +6,21 @@ namespace Chirp.CLI;
 
 public class Controller
 {
-    private readonly HttpClient _client = new();
+    private readonly HttpClient _client;
+    private string _baseURL;
+
+    public Controller()
+    {
+        // ---- HTTP ---- //
+        _client = new HttpClient();
+        _baseURL = "http://localhost:5135";
+        _client.DefaultRequestHeaders.Accept.Clear();
+        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _client.BaseAddress = new Uri(_baseURL);
+    }
 
     public int Run(string[] args)
     {
-        // ---- HTTP ---- //
-        var baseURL = "http://localhost:5012";
-        _client.DefaultRequestHeaders.Accept.Clear();
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        _client.BaseAddress = new Uri(baseURL);
-
         // ---- COMMANDS ---- //
         var rootCommand = new RootCommand("Chirp command line interface");
         var readCommand = new Command("read", "Read messages in the database");
@@ -34,9 +39,7 @@ public class Controller
         if (parseResult.GetResult(readCommand) != null)
         {
             var readAmount = parseResult.GetValue<int?>("readAmount");
-            // READ CHEEPS
-
-            UserInterface<Cheep<string>>.PrintCheeps(ReadCheeps(readAmount));
+            ReadCheeps(readAmount).GetAwaiter().GetResult();
         }
 
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
@@ -50,10 +53,18 @@ public class Controller
         return 0;
     }
 
-    async IAsyncEnumerable<Cheep<string>> ReadCheeps(int? limit = null)
+    async Task ReadCheeps(int? limit = null)
     {
-        var cheeps = await _client.GetFromJsonAsync<Cheep<string>>($"cheeps?limit={limit}");
-        yield return cheeps;
+        //TODO: ?limit={limit}
+        var cheeps = await _client.GetFromJsonAsync<List<Cheep<string>>>($"cheeps");
+        if (cheeps != null)
+        {
+            await UserInterface<Cheep<string>>.PrintCheeps(cheeps);
+        }
+        else
+        {
+            throw new Exception("No cheeps found");
+        }
     }
 
     private static void HandleParseErrors(ParseResult parseResult)
