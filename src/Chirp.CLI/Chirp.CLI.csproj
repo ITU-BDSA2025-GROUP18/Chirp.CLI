@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleDB\SimpleDB.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="chirp_cli_db.csv" />
   </ItemGroup>
 
