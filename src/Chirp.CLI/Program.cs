@@ -2,9 +2,9 @@
 
 public class Program
 {
-    public static int Main(string[] args)
+    public static async Task<int> Main(string[] args)
     {
         var controller = new Controller();
-        return controller.Run(args);
+        return await controller.Run(args); // Run is async Task<int>
     }
 }

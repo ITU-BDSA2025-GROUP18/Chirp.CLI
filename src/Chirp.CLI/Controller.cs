@@ -19,7 +19,7 @@ public class Controller
         _client.BaseAddress = new Uri(_baseURL);
     }
 
-    public int Run(string[] args)
+    public async Task<int> Run(string[] args)
     {
         // ---- COMMANDS ---- //
         var rootCommand = new RootCommand("Chirp command line interface");
@@ -39,7 +39,7 @@ public class Controller
         if (parseResult.GetResult(readCommand) != null)
         {
             var readAmount = parseResult.GetValue<int?>("readAmount");
-            ReadCheeps(readAmount).GetAwaiter().GetResult();
+            await ReadCheepsFromCSVDBService(readAmount);
         }
 
         if (parseResult.GetResult(cheepCommand)?.GetValue(cheepArg) is { } message)
@@ -53,10 +53,12 @@ public class Controller
         return 0;
     }
 
-    async Task ReadCheeps(int? limit = null)
+    async Task ReadCheepsFromCSVDBService(int? limit = null)
     {
-        //TODO: ?limit={limit}
-        var cheeps = await _client.GetFromJsonAsync<List<Cheep<string>>>($"cheeps");
+        var url = limit.HasValue
+            ? $"cheeps?limit={limit.Value}"
+            : "cheeps";
+        var cheeps = await _client.GetFromJsonAsync<List<Cheep<string>>>(url);
         if (cheeps != null)
         {
             await UserInterface<Cheep<string>>.PrintCheeps(cheeps);
