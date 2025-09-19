@@ -1,4 +1,4 @@
-namespace Chirp.CLI;
+/*namespace Chirp.CLI;
 
 public abstract class UserInterface : Program
 {
@@ -10,4 +10,4 @@ public abstract class UserInterface : Program
             Console.WriteLine(cheep.ToString());
         }
     }
-}
+}*/

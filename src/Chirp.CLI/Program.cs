@@ -1,4 +1,4 @@
-﻿using Chirp.CLI.Data;
+﻿/*using Chirp.CLI.Data;
 using SimpleDB;
 
 namespace Chirp.CLI;
@@ -12,4 +12,4 @@ public class Program
         var controller = new Controller(database);
         return controller.Run(args);
     }
-}
+}*/
