@@ -14,5 +14,7 @@ public class CheepController
         app.MapGet("/cheeps", (int? limit=null) => repository.Read(limit));
         
         
+        /// ======== POST ======== ///
+        app.MapPost("/cheep", (Cheep cheep) => repository.Store(cheep))
     }
 }
