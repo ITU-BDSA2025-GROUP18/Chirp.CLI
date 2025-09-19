@@ -21,4 +21,12 @@ public class CheepRepository<T>
         
         return records.GetRange(0, limit.Value);
     }
+    
+    public void Store(T record)
+    {
+        using var writer = new StreamWriter(path, append: true);
+        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        csv.WriteRecord(record);
+        writer.WriteLine();
+    }
 }
