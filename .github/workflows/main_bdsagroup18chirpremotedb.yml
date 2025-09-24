@@ -22,6 +22,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
+      - name: Clean site
+        run: rm -rf /home/site/wwwroot/*
 
       - name: Restore dependencies
         run: dotnet restore src/Chirp.CSVDBService
@@ -69,4 +71,5 @@ jobs:
           app-name: 'bdsagroup18chirpremotedb'
           slot-name: 'Production'
           package: ./net-app
+
 
