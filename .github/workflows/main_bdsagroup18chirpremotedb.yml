@@ -4,9 +4,6 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup18chirpremotedb
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -85,4 +82,5 @@ jobs:
           app-name: 'bdsagroup18chirpremotedb'
           slot-name: 'Production'
           package: ./net-app
+
 
