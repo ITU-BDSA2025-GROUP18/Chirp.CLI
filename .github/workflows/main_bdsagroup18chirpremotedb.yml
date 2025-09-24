@@ -30,7 +30,10 @@ jobs:
         run: dotnet build src/Chirp.CSVDBService --configuration Release --no-restore
 
       - name: Publish with dotnet
-        run: dotnet publish src/Chirp.CSVDBService -c Release -o ./publish
+        run: dotnet publish src/Chirp.CSVDBService/Chirp.CSVDBService.csproj -c Release -o ./publish
+
+      - name: List publish output
+        run: ls -R ./publish
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -66,3 +69,4 @@ jobs:
           app-name: 'bdsagroup18chirpremotedb'
           slot-name: 'Production'
           package: ./net-app
+
