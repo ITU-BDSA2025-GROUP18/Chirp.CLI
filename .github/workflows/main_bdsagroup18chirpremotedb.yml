@@ -22,8 +22,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
-      - name: Clean site
-        run: rm -rf /home/site/wwwroot/*
 
       - name: Restore dependencies
         run: dotnet restore src/Chirp.CSVDBService
@@ -64,12 +62,26 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BFAC92B13274495E96AB6B6282A8DA2B }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2CBA2A62AED343A188A7DA03FC51FCE9 }}
 
-      - name: Deploy to Azure Web App
+      # Step 1: Create an empty.zip
+      - name: Create empty.zip
+        run: |
+          mkdir empty
+          cd empty
+          zip -r ../empty.zip . -i .
+
+      # Step 2: Deploy empty.zip to wipe wwwroot
+      - name: Clean wwwroot on Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'bdsagroup18chirpremotedb'
+          slot-name: 'Production'
+          package: ./empty.zip
+
+      # Step 3: Deploy the real app
+      - name: Deploy Chirp.CSVDBService to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'bdsagroup18chirpremotedb'
           slot-name: 'Production'
           package: ./net-app
-
-
