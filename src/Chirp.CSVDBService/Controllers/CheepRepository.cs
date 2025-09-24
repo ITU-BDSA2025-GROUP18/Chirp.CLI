@@ -6,22 +6,26 @@ namespace Chirp.CSVDBService.Controllers;
 
 public class CheepRepository<T>
 {
-    private string _path = "Data/chirp_cli_db.csv";
+    private string _path;
     private StreamWriter _writer;
     private CsvWriter _csv;
 
     public CheepRepository()
     {
+        var home = Environment.GetEnvironmentVariable("HOME");
+        _path = Path.Combine(home, "chirp_cli_db.csv");
+
+        var dir = Path.GetDirectoryName(_path);
+        if (!Directory.Exists(dir))
+            Directory.CreateDirectory(dir);
+
         if (!File.Exists(_path))
         {
             using var writer = new StreamWriter(_path);
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.WriteHeader<T>();
+            csv.NextRecord();
         }
-
-        // Open the main writer for appending
-        _writer = new StreamWriter(_path, append: true);
-        _csv = new CsvWriter(_writer, CultureInfo.InvariantCulture);
     }
 
     public IEnumerable<T> Read(int? limit = null)
