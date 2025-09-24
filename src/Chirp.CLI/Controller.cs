@@ -14,6 +14,7 @@ public class Controller
         // ---- HTTP ---- //
         _client = new HttpClient();
         _baseURL = "https://bdsagroup18chirpremotedb-b7fcdvashugchmcj.germanywestcentral-01.azurewebsites.net/";
+        //_baseURL = "http://localhost:5135";
         _client.DefaultRequestHeaders.Accept.Clear();
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         _client.BaseAddress = new Uri(_baseURL);
