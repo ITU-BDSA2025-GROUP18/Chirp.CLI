@@ -23,11 +23,8 @@ public abstract class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
         app.UseRouting();
-
         app.MapRazorPages();
-
         app.Run();
     }
 }
