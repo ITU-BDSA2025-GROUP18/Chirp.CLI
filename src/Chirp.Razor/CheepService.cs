@@ -1,6 +1,6 @@
 using System.Globalization;
 
-public record CheepViewModel(string Author, string Message, string Timestamp);
+namespace Chirp.Razor;
 
 public interface ICheepService
 {
