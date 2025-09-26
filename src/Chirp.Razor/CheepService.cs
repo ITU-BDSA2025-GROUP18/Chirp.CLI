@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace Chirp.Razor;
 
 public interface ICheepService
@@ -10,12 +8,7 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    private readonly DbFacade _dbFacade;
-
-    public CheepService()
-    {
-        _dbFacade = new DbFacade();
-    }
+    private readonly DbFacade _dbFacade = new();
 
     public List<CheepViewModel> GetCheeps()
     {
