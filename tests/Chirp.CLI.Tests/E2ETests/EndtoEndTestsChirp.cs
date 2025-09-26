@@ -44,10 +44,13 @@ public class ChirpEndToEndTests : IAsyncLifetime
     [Fact]
     public async Task Cheep_Then_Read_ShouldReturnMessage()
     {
+        // Arrange
         var controller = new CLI.Controller(_testUrl);
 
+        // Act: send a cheep
         await controller.Run(["cheep", "Hello world!"]);
 
+        // Act: read back messages
         await using var sw = new StringWriter();
         Console.SetOut(sw);
 
@@ -55,11 +58,12 @@ public class ChirpEndToEndTests : IAsyncLifetime
 
         var output = sw.ToString();
 
+        // Assert: Should not throw
         Assert.Contains("Hello world!", output);
         Assert.Contains(Environment.UserName, output);
     }
 
-/*
+
     [Theory]
     [InlineData("cheep", "")]
     [InlineData("cheep", "🔥 fuzz input with unicode!")]
@@ -67,36 +71,32 @@ public class ChirpEndToEndTests : IAsyncLifetime
     public void Cheep_WithVariousInputs_ShouldNotCrash(string command, string message)
     {
         // Arrange
+        var controller = new CLI.Controller(_testUrl);
+
+        // Act + Assert: Should not throw
+        var ex = Record.ExceptionAsync(() => controller.Run([command, message]));
+        Assert.Null(ex);
+    }
+
+    [Fact]
+    public async Task Read_MoreThanStored_ShouldHandleGracefully()
+    {
+        // Arrange
         /*We no longer need to arrange a database since it
-         is in the cloud which is our azure webpage
-    var controller = new CLI.Controller("http://localhost:8080");
+         is in the cloud which is our azure webpage */
+        var controller = new CLI.Controller("http://localhost:8080");
 
-    // Act + Assert: Should not throw
-    var ex = Record.ExceptionAsync(() => controller.Run(new[] { command, message }));
-    Assert.Null(ex);
-}
+        // Store only one cheep
+        await controller.Run(new[] { "cheep", "Only one" });
 
-[Fact]
-public async Task Read_MoreThanStored_ShouldHandleGracefully()
-{
-    // Arrange
-    /*We no longer need to arrange a database since it
-     is in the cloud which is our azure webpage
-    var controller = new CLI.Controller("http://localhost:8080");
+        using var sw = new StringWriter();
+        Console.SetOut(sw);
 
-    // Store only one cheep
-    await controller.Run(new[] { "cheep", "Only one" });
+        // Act: try to read 10
+        await controller.Run(new[] { "read" });
+        var output = sw.ToString();
 
-    using var sw = new StringWriter();
-    Console.SetOut(sw);
-
-    // Act: try to read 10
-    await controller.Run(new[] { "read" });
-    var output = sw.ToString();
-
-    // Assert: Still should print one, not throw
-    Assert.Contains("Only one", output);
-}
-
-*/
+        // Assert: Still should print one, not throw
+        Assert.Contains("Only one", output);
+    }
 }
