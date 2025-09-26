@@ -5,14 +5,23 @@ namespace Chirp.Razor;
 public class DBFacade
 {
     private const string sqlDBFilePath = "./Data/database.db";
-    private readonly SqliteConnection connection;
+    private readonly SqliteConnection _connection;
+    private readonly SqliteCommand _command;
 
     public DBFacade()
     {
-        connection = new SqliteConnection($"Data Source={sqlDBFilePath}");
-        connection.Open();
+        _connection = new SqliteConnection($"Data Source={sqlDBFilePath}");
+        _connection.Open();
+
+        _command = _connection.CreateCommand();
     }
 
-    public void CloseConnection() { connection.Close(); }
+    public void CloseConnection() { _connection.Close(); }
 
+    public List<CheepViewModel> GetCheeps()
+    {
+
+
+        return null!;
+    }
 }
