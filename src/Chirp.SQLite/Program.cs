@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Microsoft.Data.Sqlite;
 
-var sqlDBFilePath = "/tmp/chirp.db";
+var sqlDBFilePath = "./tmp/database.db";
 var sqlQuery = @"SELECT * FROM message ORDER by message.pub_date desc";
 
 using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
