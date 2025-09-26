@@ -60,7 +60,7 @@ public class ChirpEndToEndTests : IDisposable
         var controller = new Controller();
 
         // Act + Assert: Should not throw
-        var ex = Record.Exception(() => controller.Run(new[] { command, message }));
+        var ex = Record.ExceptionAsync(() => controller.Run(new[] { command, message }));
         Assert.Null(ex);
     }
 
