@@ -27,10 +27,11 @@ public class DbFacade
     {
         var cheeps = new List<CheepViewModel>();
         var sqlQuery =
-            """
-            SELECT u.username, m.text, m.pub_date FROM message m, user u
-                          WHERE m.author_id = u.user_id
-                          ORDER by m.pub_date desc
+            $"""
+            SELECT u.username, m.text, m.pub_date
+            FROM message m, user u
+            WHERE m.author_id = u.user_id
+            ORDER by m.pub_date DESC;
             """;
 
         if (limit != null) sqlQuery += " LIMIT " + limit;
@@ -45,7 +46,7 @@ public class DbFacade
             var text = dataRecord[1].ToString()!;
             var pubDate = long.Parse(dataRecord[2].ToString()!);
 
-            var formattedTimeStamp = FormatTimeStamp(pubDate);
+            var formattedTimeStamp = FormatTimestamp(pubDate);
 
             cheeps.Add(new CheepViewModel(username, text, formattedTimeStamp));
         }
@@ -58,17 +59,12 @@ public class DbFacade
         var cheeps = new List<CheepViewModel>();
         var sqlQuery =
             $"""
-                 SELECT
-                 m.message_id,
-                 m.text,
-                 m.pub_date,
-                 u.username
-                 FROM message m
-                 JOIN user u ON m.author_id = u.user_id
-                 WHERE u.username = '{author}'
-                 ORDER BY m.pub_date DESC;
-
-             """;
+            SELECT u.username, m.text, m.pub_date
+            FROM message m JOIN user u
+            ON m.author_id = u.user_id
+            WHERE u.username = '{author}'
+            ORDER BY m.pub_date DESC;
+            """;
 
         _command.CommandText = sqlQuery;
         using var reader = _command.ExecuteReader();
@@ -77,11 +73,11 @@ public class DbFacade
         {
             IDataRecord dataRecord = reader;
 
-            var username = dataRecord[3].ToString()!;
+            var username = dataRecord[0].ToString()!;
             var text = dataRecord[1].ToString()!;
             var pubDate = long.Parse(dataRecord[2].ToString()!);
 
-            var formattedTimeStamp = FormatTimeStamp(pubDate);
+            var formattedTimeStamp = FormatTimestamp(pubDate);
 
             cheeps.Add(new CheepViewModel(username, text, formattedTimeStamp));
         }
@@ -89,7 +85,7 @@ public class DbFacade
         return cheeps;
     }
 
-    private static string FormatTimeStamp(long pubDate)
+    private static string FormatTimestamp(long pubDate)
     {
         var formattedTimeStamp = DateTimeOffset
             .FromUnixTimeSeconds(pubDate)
