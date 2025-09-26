@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using Chirp.CLI;
@@ -28,8 +28,9 @@ public class ChirpEndToEndTests : IDisposable
     public void Cheep_Then_Read_ShouldReturnMessage()
     {
         // Arrange
-        var db = new CSVDatabase<Cheep<string>>(_dbPath);
-        var controller = new Controller(db);
+        /*We no longer need to arrange a database since it
+         is in the cloud which is our azure webpage*/
+        var controller = new Controller();
 
         // Act: send a cheep
         controller.Run(new[] { "cheep", "Hello world!" });
@@ -54,8 +55,9 @@ public class ChirpEndToEndTests : IDisposable
     public void Cheep_WithVariousInputs_ShouldNotCrash(string command, string message)
     {
         // Arrange
-        var db = new CSVDatabase<Cheep<string>>(_dbPath);
-        var controller = new Controller(db);
+        /*We no longer need to arrange a database since it
+         is in the cloud which is our azure webpage*/
+        var controller = new Controller();
 
         // Act + Assert: Should not throw
         var ex = Record.Exception(() => controller.Run(new[] { command, message }));
@@ -66,8 +68,9 @@ public class ChirpEndToEndTests : IDisposable
     public void Read_MoreThanStored_ShouldHandleGracefully()
     {
         // Arrange
-        var db = new CSVDatabase<Cheep<string>>(_dbPath);
-        var controller = new Controller(db);
+        /*We no longer need to arrange a database since it
+         is in the cloud which is our azure webpage*/
+        var controller = new Controller();
 
         // Store only one cheep
         controller.Run(new[] { "cheep", "Only one" });
@@ -82,6 +85,6 @@ public class ChirpEndToEndTests : IDisposable
         // Assert: Still should print one, not throw
         Assert.Contains("Only one", output);
     }
-}*/
+}
 
 
