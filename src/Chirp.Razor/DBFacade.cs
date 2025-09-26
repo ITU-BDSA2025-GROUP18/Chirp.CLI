@@ -45,10 +45,7 @@ public class DbFacade
             var text = dataRecord[1].ToString()!;
             var pubDate = long.Parse(dataRecord[2].ToString()!);
 
-            var formattedTimeStamp = DateTimeOffset
-                .FromUnixTimeSeconds(pubDate)
-                .LocalDateTime
-                .ToString(CultureInfo.InvariantCulture);
+            var formattedTimeStamp = FormatTimeStamp(pubDate);
 
             cheeps.Add(new CheepViewModel(username, text, formattedTimeStamp));
         }
@@ -61,16 +58,15 @@ public class DbFacade
         var cheeps = new List<CheepViewModel>();
         var sqlQuery =
             $"""
-
-                         select
-                             m.message_id,
-                             m.text,
-                             m.pub_date,
-                             u.username
-                         from message m
-                         join user u on m.author_id = u.user_id
-                         where u.username = '{author}'
-                         order by m.pub_date desc;
+                 SELECT
+                 m.message_id,
+                 m.text,
+                 m.pub_date,
+                 u.username
+                 FROM message m
+                 JOIN user u ON m.author_id = u.user_id
+                 WHERE u.username = '{author}'
+                 ORDER BY m.pub_date DESC;
 
              """;
 
@@ -85,14 +81,20 @@ public class DbFacade
             var text = dataRecord[1].ToString()!;
             var pubDate = long.Parse(dataRecord[2].ToString()!);
 
-            var formattedTimeStamp = DateTimeOffset
-                .FromUnixTimeSeconds(pubDate)
-                .LocalDateTime
-                .ToString(CultureInfo.InvariantCulture);
+            var formattedTimeStamp = FormatTimeStamp(pubDate);
 
             cheeps.Add(new CheepViewModel(username, text, formattedTimeStamp));
         }
 
         return cheeps;
+    }
+
+    private static string FormatTimeStamp(long pubDate)
+    {
+        var formattedTimeStamp = DateTimeOffset
+            .FromUnixTimeSeconds(pubDate)
+            .LocalDateTime
+            .ToString(CultureInfo.InvariantCulture);
+        return formattedTimeStamp;
     }
 }
