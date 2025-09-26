@@ -14,7 +14,7 @@ namespace Chirp.Tests;
 public class ChirpEndToEndTests : IAsyncLifetime
 {
     private IHost? _server;
-    private readonly string _testUrl = "http://localhost:8080";
+    private const string _testUrl = "http://localhost:8080";
 
     public async Task InitializeAsync()
     {
