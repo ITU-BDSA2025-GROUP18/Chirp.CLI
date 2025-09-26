@@ -31,7 +31,8 @@ public class CheepService : ICheepService
     public List<CheepViewModel> GetCheepsFromAuthor(string author)
     {
         // filter by the provided author name
-        return _cheeps.Where(x => x.Author == author).ToList();
+        //return _cheeps.Where(x => x.Author == author).ToList();
+        return _dbFacade.GetCheepsFromAuthor(author);
     }
 
     private static string UnixTimeStampToDateTimeString(long unixTimeStamp)
