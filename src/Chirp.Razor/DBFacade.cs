@@ -7,7 +7,7 @@ namespace Chirp.Razor;
 
 public class DBFacade
 {
-    private const string sqlDBFilePath = "./Data/database.db";
+    private const string sqlDBFilePath = "./Data/cheeps.db";
     private readonly SqliteConnection _connection;
     private readonly SqliteCommand _command;
 
