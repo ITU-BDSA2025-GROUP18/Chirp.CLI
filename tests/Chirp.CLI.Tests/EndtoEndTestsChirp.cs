@@ -25,7 +25,7 @@ public class ChirpEndToEndTests : IDisposable
     }
 
     [Fact]
-    public void Cheep_Then_Read_ShouldReturnMessage()
+    public async Task Cheep_Then_Read_ShouldReturnMessage()
     {
         // Arrange
         /*We no longer need to arrange a database since it
@@ -33,13 +33,13 @@ public class ChirpEndToEndTests : IDisposable
         var controller = new Controller();
 
         // Act: send a cheep
-        controller.Run(new[] { "cheep", "Hello world!" });
+        await controller.Run(new[] { "cheep", "Hello world!" });
 
         // Act: read back messages
         using var sw = new StringWriter();
         Console.SetOut(sw);
 
-        controller.Run(new[] { "read", "1" });
+        await controller.Run(new[] { "read", "1"}); //den hed "read", "1" før
 
         var output = sw.ToString();
 
@@ -65,7 +65,7 @@ public class ChirpEndToEndTests : IDisposable
     }
 
     [Fact]
-    public void Read_MoreThanStored_ShouldHandleGracefully()
+    public async Task Read_MoreThanStored_ShouldHandleGracefully()
     {
         // Arrange
         /*We no longer need to arrange a database since it
@@ -73,17 +73,17 @@ public class ChirpEndToEndTests : IDisposable
         var controller = new Controller();
 
         // Store only one cheep
-        controller.Run(new[] { "cheep", "Only one" });
+        await controller.Run(new[] { "cheep", "Only one" });
 
         using var sw = new StringWriter();
         Console.SetOut(sw);
 
         // Act: try to read 10
-        controller.Run(new[] { "read", "10" });
+        await controller.Run(new[] { "read"});
         var output = sw.ToString();
 
         // Assert: Still should print one, not throw
-        Assert.Contains("Only one", output);
+            Assert.Contains("Only one", output);
     }
 }
 
