@@ -9,6 +9,9 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+      <Content Include="tmp/database.db">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
