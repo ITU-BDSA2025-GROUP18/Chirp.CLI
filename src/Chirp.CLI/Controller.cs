@@ -9,15 +9,16 @@ public class Controller
     private readonly HttpClient _client;
     private string _baseURL;
 
-    public Controller()
+    public Controller(string? baseUrl = null)
     {
         // ---- HTTP ---- //
-        _client = new HttpClient();
-        _baseURL = "https://bdsagroup18chirpremotedb-b7fcdvashugchmcj.germanywestcentral-01.azurewebsites.net/";
-        //_baseURL = "http://localhost:5135";
+        _baseURL = baseUrl ?? "bdsagroup18chirpremotedb-b7fcdvashugchmcj.germanywestcentral-01.azurewebsites.net";
+        _client = new HttpClient
+        {
+            BaseAddress = new Uri(_baseURL)
+        };
         _client.DefaultRequestHeaders.Accept.Clear();
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        _client.BaseAddress = new Uri(_baseURL);
     }
 
     public async Task<int> Run(string[] args)

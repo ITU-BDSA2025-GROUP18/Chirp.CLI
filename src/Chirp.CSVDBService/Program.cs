@@ -1,10 +1,20 @@
-using Chirp.CSVDBService;
 using Chirp.CSVDBService.Controllers;
 using Chirp.CSVDBService.Models;
 
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-var repository = new CheepRepository<Cheep<string>>();
-_ = new CheepController(app, repository);
+namespace Chirp.CSVDBService;
 
-app.Run();
+public class Program()
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        var app = builder.Build();
+
+        app.Urls.Add("http://localhost:8080");
+
+        var repository = new CheepRepository<Cheep<string>>();
+        _ = new CheepController(app, repository);
+
+        app.Run();
+    }
+}

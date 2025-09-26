@@ -12,8 +12,9 @@ public class CheepRepository<T>
 
     public CheepRepository()
     {
-        var home = Environment.GetEnvironmentVariable("HOME");
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         _path = Path.Combine(home, "chirp_cli_db.csv");
+
 
         var dir = Path.GetDirectoryName(_path);
         if (!Directory.Exists(dir))
