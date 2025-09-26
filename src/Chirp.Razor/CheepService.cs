@@ -10,10 +10,10 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    private readonly DBFacade _dbFacade;
+    private readonly DbFacade _dbFacade;
     public CheepService()
     {
-        _dbFacade = new DBFacade();
+        _dbFacade = new DbFacade();
     }
 
     // These would normally be loaded from a database for example
