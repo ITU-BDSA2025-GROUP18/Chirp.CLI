@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Globalization;
 using Microsoft.Data.Sqlite;
 
 var sqlDBFilePath = "./tmp/database.db";
@@ -20,8 +21,13 @@ using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
 
         var username = dataRecord[5];
         var text = dataRecord[2];
-        var pub_date = dataRecord[3];
+        var pub_date = long.Parse(dataRecord[3].ToString()!);
 
-        Console.WriteLine($"{username} @ {pub_date}: {text}");
+        var formattedTimeStamp = DateTimeOffset
+            .FromUnixTimeSeconds(pub_date)
+            .LocalDateTime
+            .ToString(CultureInfo.InvariantCulture);
+
+        Console.WriteLine($"{username} @ {formattedTimeStamp}: {text}");
     }
 }
