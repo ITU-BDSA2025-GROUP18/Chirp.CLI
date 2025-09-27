@@ -68,13 +68,13 @@ public class ChirpEndToEndTests : IAsyncLifetime
     [InlineData("cheep", "")]
     [InlineData("cheep", "🔥 fuzz input with unicode!")]
     [InlineData("cheep", "DROP TABLE chirps;")]
-    public void Cheep_WithVariousInputs_ShouldNotCrash(string command, string message)
+    public async Task Cheep_WithVariousInputs_ShouldNotCrash(string command, string message)
     {
         // Arrange
         var controller = new CLI.Controller(_testUrl);
 
         // Act + Assert: Should not throw
-        var ex = Record.ExceptionAsync(() => controller.Run([command, message]));
+        var ex = await Record.ExceptionAsync( () =>  controller.Run([command, message]));
         Assert.Null(ex);
     }
 
@@ -82,8 +82,6 @@ public class ChirpEndToEndTests : IAsyncLifetime
     public async Task Read_MoreThanStored_ShouldHandleGracefully()
     {
         // Arrange
-        /*We no longer need to arrange a database since it
-         is in the cloud which is our azure webpage */
         var controller = new CLI.Controller("http://localhost:8080");
 
         // Store only one cheep
