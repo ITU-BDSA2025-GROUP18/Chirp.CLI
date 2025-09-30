@@ -10,10 +10,10 @@ public class CheepRepository<T>
     private StreamWriter _writer;
     private CsvWriter _csv;
 
-    public CheepRepository()
+    public CheepRepository(string? path = null)
     {
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        _path = Path.Combine(home, "chirp_cli_db.csv");
+        _path = path ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            "chirp_cli_db.csv");
 
 
         var dir = Path.GetDirectoryName(_path);

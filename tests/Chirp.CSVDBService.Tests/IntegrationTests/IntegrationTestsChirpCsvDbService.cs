@@ -26,4 +26,17 @@ public class IntegrationTestsChirpCsvDbService
         // Assert
         Assert.Contains(cheep, records);
     }
+
+    [Fact]
+    private void ReadShouldReadCheepFromCsvdb()
+    {
+        // Arrange
+        var controller = new CheepRepository<Cheep<string>>();
+        var cheep = new Cheep<string>("Alice", "Lorem ipsum", 12345);
+
+        using var writer = new StreamWriter(_path, append: true);
+        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        csv.WriteRecord(record);
+        writer.WriteLine();
+    }
 }
