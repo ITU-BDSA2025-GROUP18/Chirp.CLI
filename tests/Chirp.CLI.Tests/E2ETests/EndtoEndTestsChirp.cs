@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Xunit;
 
-namespace Chirp.Tests;
+namespace Chirp.CLI.Tests.E2ETests;
 
 // ---- TESTING INFORMATION ---- //
 // These test should run against the deployed app on Azure.
 // But since we have shut down Azure webapp, we are now using a simulated webserver on localhost.
+// This makes it act almost exactly like our IntegrationTests
 
 public class ChirpEndToEndTests : IAsyncLifetime
 {
@@ -74,7 +75,7 @@ public class ChirpEndToEndTests : IAsyncLifetime
         var controller = new CLI.Controller(_testUrl);
 
         // Act + Assert: Should not throw
-        var ex = await Record.ExceptionAsync( () =>  controller.Run([command, message]));
+        var ex = await Record.ExceptionAsync(() => controller.Run([command, message]));
         Assert.Null(ex);
     }
 
@@ -82,7 +83,7 @@ public class ChirpEndToEndTests : IAsyncLifetime
     public async Task Read_MoreThanStored_ShouldHandleGracefully()
     {
         // Arrange
-        var controller = new CLI.Controller("http://localhost:8080");
+        var controller = new CLI.Controller(_testUrl);
 
         // Store only one cheep
         await controller.Run(new[] { "cheep", "Only one" });
