@@ -45,7 +45,7 @@ public class ChirpCliIntegrationTests : IAsyncLifetime
         await using var sw = new StringWriter();
         Console.SetOut(sw);
 
-        await controller.Run(["read", "1"]);
+        await controller.Run(["read"]);
 
         var output = sw.ToString();
 
