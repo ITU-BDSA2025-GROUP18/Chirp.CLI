@@ -1,7 +1,10 @@
 ﻿using System.Globalization;
+using System.Net.Http.Json;
 using Chirp.CSVDBService.Controllers;
 using Chirp.CSVDBService.Models;
 using CsvHelper;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Builder;
 
 namespace Chirp.CSVDBService.Tests.IntegrationTests;
 
@@ -85,4 +88,21 @@ public class IntegrationTestsChirpCsvDbService : IDisposable
         // Assert
         Assert.Contains(cheep, records);
     }
+
+    [Fact]
+    private async Task Endpoint_Cheep_Stores_CheepInDatabase()
+    {
+        //Arrange
+        using var factory = new WebApplicationFactory<Program>(); //Test version of our app(in-memory) & gets httpclient
+        var client = factory.CreateClient(); //returns our said httpclient
+        var cheep = new Cheep<string>("Eddie", "I'm in the base!", 12345);
+
+        //Act
+        var response = await client.PostAsJsonAsync("/cheep", cheep); //sends request to our endpoint(/cheep)
+
+        //Assert
+        Assert.True(response.IsSuccessStatusCode); //We are checking if we get a SuccessStatusCode(200-299)
+    }
+
+
 }
