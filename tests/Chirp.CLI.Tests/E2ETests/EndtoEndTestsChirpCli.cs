@@ -12,7 +12,7 @@ namespace Chirp.CLI.Tests.E2ETests;
 // But since we have shut down Azure webapp, we are now skipping these tests.
 // This makes it act almost exactly like our IntegrationTests
 
-public class ChirpEndToEndTests : IAsyncLifetime
+public class ChirpCliEndToEndTests : IAsyncLifetime
 {
     private IHost? _server;
     private const string _testUrl = "bdsagroup18chirpremotedb-b7fcdvashugchmcj.germanywestcentral-01.azurewebsites.net";

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Chirp.CLI.Tests.IntegrationTests;
 
-public class IntegrationTestsChirpCLI : IAsyncLifetime
+public class ChirpCliIntegrationTests : IAsyncLifetime
 {
     private IHost? _server;
     private const string _testUrl = "http://localhost:7070";
