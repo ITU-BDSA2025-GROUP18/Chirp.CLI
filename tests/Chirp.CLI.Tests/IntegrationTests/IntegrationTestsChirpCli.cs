@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Globalization;
+using Chirp.CSVDBService.Controllers;
+using CsvHelper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 
 namespace Chirp.CLI.Tests.IntegrationTests;
 
 public class ChirpCliIntegrationTests : IAsyncLifetime
 {
+    private readonly string _tempFile = Path.GetTempFileName(); // temporary csv db for testing
     private IHost? _server;
     private const string _testUrl = "http://localhost:7070";
 
@@ -13,7 +17,7 @@ public class ChirpCliIntegrationTests : IAsyncLifetime
         var builder = WebApplication.CreateBuilder();
         var app = builder.Build();
 
-        var repository = new CSVDBService.Controllers.CheepRepository<CSVDBService.Models.Cheep<string>>();
+        var repository = new CheepRepository<CSVDBService.Models.Cheep<string>>(_tempFile);
         _ = new CSVDBService.CheepController(app, repository);
 
         _server = app;
@@ -30,6 +34,19 @@ public class ChirpCliIntegrationTests : IAsyncLifetime
             await _server.StopAsync();
             _server.Dispose();
         }
+
+        if (File.Exists(_tempFile))
+            File.Delete(_tempFile);
+    }
+
+    private void ArrangeCsv()
+    {
+        using (var writer = new StreamWriter(_tempFile, append: true))
+        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+        {
+            csv.WriteHeader<Cheep<string>>();
+            csv.NextRecord();
+        }
     }
 
     [Fact]
@@ -37,6 +54,7 @@ public class ChirpCliIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var controller = new CLI.Controller(_testUrl);
+        ArrangeCsv();
 
         // Act: send a cheep
         await controller.Run(["cheep", "Hello world!"]);
@@ -62,6 +80,7 @@ public class ChirpCliIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var controller = new CLI.Controller(_testUrl);
+        ArrangeCsv();
 
         // Act + Assert: Should not throw
         var ex = await Record.ExceptionAsync(() => controller.Run([command, message]));
@@ -73,6 +92,7 @@ public class ChirpCliIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var controller = new CLI.Controller(_testUrl);
+        ArrangeCsv();
 
         // Store only one cheep
         await controller.Run(new[] { "cheep", "Only one" });
