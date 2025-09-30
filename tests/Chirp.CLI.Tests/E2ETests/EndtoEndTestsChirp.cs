@@ -9,13 +9,13 @@ namespace Chirp.CLI.Tests.E2ETests;
 
 // ---- TESTING INFORMATION ---- //
 // These test should run against the deployed app on Azure.
-// But since we have shut down Azure webapp, we are now using a simulated webserver on localhost.
+// But since we have shut down Azure webapp, we are now skipping these tests.
 // This makes it act almost exactly like our IntegrationTests
 
 public class ChirpEndToEndTests : IAsyncLifetime
 {
     private IHost? _server;
-    private const string _testUrl = "http://localhost:8080";
+    private const string _testUrl = "bdsagroup18chirpremotedb-b7fcdvashugchmcj.germanywestcentral-01.azurewebsites.net";
 
     public async Task InitializeAsync()
     {
@@ -42,7 +42,7 @@ public class ChirpEndToEndTests : IAsyncLifetime
         }
     }
 
-    [Fact]
+    [Fact(Skip = "Azure Server Offline")]
     public async Task Cheep_Then_Read_ShouldReturnMessage()
     {
         // Arrange
@@ -65,7 +65,7 @@ public class ChirpEndToEndTests : IAsyncLifetime
     }
 
 
-    [Theory]
+    [Theory(Skip = "Azure Server Offline")]
     [InlineData("cheep", "")]
     [InlineData("cheep", "🔥 fuzz input with unicode!")]
     [InlineData("cheep", "DROP TABLE chirps;")]
@@ -79,7 +79,7 @@ public class ChirpEndToEndTests : IAsyncLifetime
         Assert.Null(ex);
     }
 
-    [Fact]
+    [Fact(Skip = "Azure Server Offline")]
     public async Task Read_MoreThanStored_ShouldHandleGracefully()
     {
         // Arrange
