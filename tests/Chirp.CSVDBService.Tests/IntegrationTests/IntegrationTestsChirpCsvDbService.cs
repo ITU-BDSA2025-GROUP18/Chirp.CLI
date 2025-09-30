@@ -15,18 +15,23 @@ public class IntegrationTestsChirpCsvDbService : IDisposable
             File.Delete(_tempFile);
     }
 
-    [Fact]
-    private void StoreShouldStoreACheepInTheCsvdb()
+    private void ArrangeCsv()
     {
-        // Arrange
-        var controller = new CheepRepository<Cheep<string>>(_tempFile);
-        var cheep = new Cheep<string>("Alice", "Lorem ipsum", 12345);
         using (var writer = new StreamWriter(_tempFile, append: true))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
             csv.WriteHeader<Cheep<string>>();
             csv.NextRecord();
         }
+    }
+
+    [Fact]
+    private void StoreShouldStoreACheepInTheCsvdb()
+    {
+        // Arrange
+        var controller = new CheepRepository<Cheep<string>>(_tempFile);
+        var cheep = new Cheep<string>("Alice", "Lorem ipsum", 12345);
+        ArrangeCsv();
 
         // Act
         controller.Store(cheep);
@@ -63,5 +68,21 @@ public class IntegrationTestsChirpCsvDbService : IDisposable
 
         // Assert
         Assert.Contains(cheep, result);
+    }
+
+    [Fact]
+    private void Cheep_Then_Read_ShouldReturnMessage()
+    {
+        // Arrange
+        var cheep = new Cheep<string>("Alice", "Lorem ipsum", 12345);
+        var controller = new CheepRepository<Cheep<string>>(_tempFile);
+        ArrangeCsv();
+
+        // Act
+        controller.Store(cheep);
+        var records = controller.Read();
+
+        // Assert
+        Assert.Contains(cheep, records);
     }
 }
