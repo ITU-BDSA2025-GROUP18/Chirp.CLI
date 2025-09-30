@@ -92,17 +92,36 @@ public class IntegrationTestsChirpCsvDbService : IDisposable
     [Fact]
     private async Task Endpoint_Cheep_Stores_CheepInDatabase()
     {
+        //Info: We are no longer testing the repository, but testing our endpoint instead.
+
         //Arrange
         using var factory = new WebApplicationFactory<Program>(); //Test version of our app(in-memory) & gets httpclient
         var client = factory.CreateClient(); //returns our said httpclient
         var cheep = new Cheep<string>("Eddie", "I'm in the base!", 12345);
 
         //Act
-        var response = await client.PostAsJsonAsync("/cheep", cheep); //sends request to our endpoint(/cheep)
+        var response = await client.PostAsJsonAsync("/cheep", cheep); //sends http-post request to our endpoint and returns http-response
 
         //Assert
         Assert.True(response.IsSuccessStatusCode); //We are checking if we get a SuccessStatusCode(200-299)
     }
 
+    [Fact]
+    private async Task Endpoint_Cheeps_Returns_CheepsInDatabase()
+    {
+        //Info: We are no longer testing the repository, but testing our endpoint instead.
 
+        //Arrange
+        using var factory = new WebApplicationFactory<Program>(); //Test version of our app(in-memory) & gets httpclient
+        var client = factory.CreateClient(); //returns our said httpclient
+        var cheep = new Cheep<string>("Eddie", "I'm in the base!", 12345);
+        var responseAfterPost = await client.PostAsJsonAsync("/cheep", cheep); //sends http-post request to our endpoint and returns http-response
+        Assert.True(responseAfterPost.IsSuccessStatusCode); //We are checking if we get a SuccessStatusCode(200-299)
+
+        //Act
+        var records = await client.GetFromJsonAsync<List<Cheep<string>>>("/cheeps"); //retrieves all cheeps
+
+        //Assert
+        Assert.Contains(cheep, records);
+    }
 }
