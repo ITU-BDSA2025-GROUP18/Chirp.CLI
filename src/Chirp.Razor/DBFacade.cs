@@ -6,13 +6,64 @@ namespace Chirp.Razor;
 
 public class DbFacade
 {
-    private const string SqlDbFilePath = "./Data/cheeps.db";
+    private readonly string _sqlDatabasePath;
     private readonly SqliteConnection _connection;
     private readonly SqliteCommand _command;
 
     public DbFacade()
     {
-        _connection = new SqliteConnection($"Data Source={SqlDbFilePath}");
+        var databasePathEnvVar = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+
+        if (databasePathEnvVar is not null)
+            _sqlDatabasePath = databasePathEnvVar;
+        else
+        {
+            var chirpDatabaseDir = Path.Combine(Path.GetTempPath(), ".chirp");
+
+            if (!Directory.Exists(chirpDatabaseDir))
+                Directory.CreateDirectory(chirpDatabaseDir);
+
+            var chirpDatabaseFile = Path.Combine(chirpDatabaseDir, "chirp.db");
+
+            if (!File.Exists(chirpDatabaseFile))
+            {
+                var conn = new SqliteConnection($"Data Source={chirpDatabaseFile}");
+                conn.Open();
+
+                var comm = conn.CreateCommand();
+                comm.CommandText =
+                """
+                CREATE TABLE user (
+                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username STRING NOT NULL,
+                email STRING NOT NULL
+                );
+
+                CREATE TABLE message (
+                message_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                author_id INTEGER NOT NULL,
+                text STRING NOT NULL,
+                pub_date INTEGER
+                );
+
+                INSERT INTO user VALUES
+                  (1,'Helge','ropf@itu.dk'),
+                  (2,'Adrian','adho@itu.dk');
+
+                INSERT INTO message VALUES
+                  (1,1,'Hello, BDSA students!',1690892208),
+                  (2,2,'Hej, velkommen til kurset.',1690895308);
+                """;
+
+                comm.ExecuteNonQuery();
+
+                conn.Close();
+            }
+
+            _sqlDatabasePath = chirpDatabaseFile;
+        }
+
+        _connection = new SqliteConnection($"Data Source={_sqlDatabasePath}");
         _connection.Open();
 
         _command = _connection.CreateCommand();
