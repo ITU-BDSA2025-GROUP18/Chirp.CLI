@@ -82,7 +82,7 @@ public class DbFacade
             SELECT u.username, m.text, m.pub_date
             FROM message m, user u
             WHERE m.author_id = u.user_id
-            ORDER by m.pub_date DESC;
+            ORDER by m.pub_date DESC
             """;
 
         if (limit != null) sqlQuery += " LIMIT " + limit;
@@ -97,9 +97,9 @@ public class DbFacade
             var text = dataRecord[1].ToString()!;
             var pubDate = long.Parse(dataRecord[2].ToString()!);
 
-            var formattedTimeStamp = FormatTimestamp(pubDate);
+            var formattedTimestamp = FormatTimestamp(pubDate);
 
-            cheeps.Add(new CheepViewModel(username, text, formattedTimeStamp));
+            cheeps.Add(new CheepViewModel(username, text, formattedTimestamp));
         }
 
         return cheeps;
@@ -114,7 +114,7 @@ public class DbFacade
             FROM message m JOIN user u
             ON m.author_id = u.user_id
             WHERE u.username = '{author}'
-            ORDER BY m.pub_date DESC;
+            ORDER BY m.pub_date DESC
             """;
 
         _command.CommandText = sqlQuery;
@@ -128,9 +128,9 @@ public class DbFacade
             var text = dataRecord[1].ToString()!;
             var pubDate = long.Parse(dataRecord[2].ToString()!);
 
-            var formattedTimeStamp = FormatTimestamp(pubDate);
+            var formattedTimestamp = FormatTimestamp(pubDate);
 
-            cheeps.Add(new CheepViewModel(username, text, formattedTimeStamp));
+            cheeps.Add(new CheepViewModel(username, text, formattedTimestamp));
         }
 
         return cheeps;
