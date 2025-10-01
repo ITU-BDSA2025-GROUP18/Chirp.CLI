@@ -74,18 +74,17 @@ public class DbFacade
         _connection.Close();
     }
 
-    public List<CheepViewModel> GetCheeps(int? limit = null)
+    public List<CheepViewModel> GetCheeps(int page)
     {
         var cheeps = new List<CheepViewModel>();
         var sqlQuery =
             $"""
-            SELECT u.username, m.text, m.pub_date
-            FROM message m, user u
-            WHERE m.author_id = u.user_id
-            ORDER by m.pub_date DESC
-            """;
-
-        if (limit != null) sqlQuery += " LIMIT " + limit;
+             SELECT u.username, m.text, m.pub_date
+             FROM message m JOIN user u
+             ON m.author_id = u.user_id
+             ORDER BY m.pub_date DESC
+             LIMIT 32 OFFSET {(page - 1) * 32}
+             """;
 
         _command.CommandText = sqlQuery;
         using var reader = _command.ExecuteReader();
