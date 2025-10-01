@@ -104,7 +104,7 @@ public class DbFacade
         return cheeps;
     }
 
-    public List<CheepViewModel> GetCheepsFromAuthor(string author)
+    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
     {
         var cheeps = new List<CheepViewModel>();
         var sqlQuery =
@@ -114,6 +114,7 @@ public class DbFacade
             ON m.author_id = u.user_id
             WHERE u.username = '{author}'
             ORDER BY m.pub_date DESC
+            LIMIT 32 OFFSET {(page - 1) * 32}
             """;
 
         _command.CommandText = sqlQuery;
