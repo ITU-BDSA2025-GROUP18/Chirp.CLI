@@ -14,9 +14,9 @@ public class PublicModel : PageModel
         Cheeps = new List<CheepViewModel>();
     }
 
-    public ActionResult OnGet()
+    public ActionResult OnGet([FromQuery] int page = 1)
     {
-        Cheeps = _service.GetCheeps();
+        Cheeps = _service.GetCheeps(page);
         return Page();
     }
 }
