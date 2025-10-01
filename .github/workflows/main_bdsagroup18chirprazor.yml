@@ -64,15 +64,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_244B0430605A43348DAF0AE2EF99381F }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_50860D392C1940B089C57C242D8D042D }}
 
-      - name: Zip artifact for deployment
-        run: zip -r ../net-app.zip ./*
-        working-directory: ./net-app
-
       - name: Deploy Chirp.Razor to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'bdsagroup18chirprazor'
           slot-name: 'Production'
-          package: ./net-app.zip
-
+          package: ./net-app
