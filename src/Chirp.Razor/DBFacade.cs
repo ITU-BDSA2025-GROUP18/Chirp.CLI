@@ -81,7 +81,7 @@ public class DbFacade
             $"""
              SELECT u.username, m.text, m.pub_date
              FROM message m JOIN user u
-             ON m.user_id = u.user_id
+             ON m.author_id = u.user_id
              ORDER BY m.pub_date DESC
              LIMIT 32 OFFSET {(page - 1) * 32}
              """;
