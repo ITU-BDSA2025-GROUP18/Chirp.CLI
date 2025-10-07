@@ -1,6 +1,17 @@
 
 namespace Chirp.Razor;
 
+#nullable disable
+
+public class CheepDTO
+{
+    public string AuthorName;
+    public string Text;
+    public string Timestamp;
+}
+
+#nullable restore
+
 public interface ICheepRepository
 {
     public Task GetCheepsAsync(int page);
