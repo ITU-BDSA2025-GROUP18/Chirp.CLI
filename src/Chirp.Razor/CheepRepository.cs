@@ -1,4 +1,7 @@
 
+using System.Globalization;
+using Microsoft.EntityFrameworkCore;
+
 namespace Chirp.Razor;
 
 #nullable disable
@@ -14,8 +17,8 @@ public class CheepDTO
 
 public interface ICheepRepository
 {
-    public Task GetCheepsAsync(int page);
-    public Task GetCheepsFromAuthorAsync(string author, int page);
+    public Task<List<CheepDTO>> GetCheepsAsync(int page);
+    public Task<List<CheepDTO>> GetCheepsFromAuthorAsync(string author, int page);
 }
 
 public class CheepRepository : ICheepRepository
@@ -27,13 +30,41 @@ public class CheepRepository : ICheepRepository
         _dbContext = dbContext;
     }
 
-    public Task GetCheepsAsync(int page)
+    public async Task<List<CheepDTO>> GetCheepsAsync(int page)
     {
-        throw new NotImplementedException();
+        var query = _dbContext.Cheeps
+            .OrderByDescending(cheep => cheep.TimeStamp)
+            .Skip((page - 1) * 32)
+            .Take(32)
+            .Select(cheep => new CheepDTO
+            {
+                AuthorName = cheep.Author.Name,
+                Text = cheep.Text,
+                Timestamp = TimeStampToLocalTimeString(cheep.TimeStamp)
+            });
+
+        return await query.ToListAsync();
     }
 
-    public Task GetCheepsFromAuthorAsync(string author, int page)
+    public async Task<List<CheepDTO>> GetCheepsFromAuthorAsync(string author, int page)
     {
-        throw new NotImplementedException();
+        var query = _dbContext.Cheeps
+            .Where(cheep => cheep.Author.Name == author)
+            .OrderByDescending(cheep => cheep.TimeStamp)
+            .Skip((page - 1) * 32)
+            .Take(32)
+            .Select(cheep => new CheepDTO
+            {
+                AuthorName = cheep.Author.Name,
+                Text = cheep.Text,
+                Timestamp = TimeStampToLocalTimeString(cheep.TimeStamp)
+            });
+
+        return await query.ToListAsync();
+    }
+
+    private static string TimeStampToLocalTimeString(DateTime timestamp)
+    {
+        return timestamp.ToLocalTime().ToString(CultureInfo.InvariantCulture);
     }
 }
