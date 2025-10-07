@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 
 public class ApiTests : IClassFixture<WebAppFactory>, IDisposable
 {

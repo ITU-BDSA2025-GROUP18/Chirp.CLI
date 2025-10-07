@@ -1,4 +1,4 @@
-﻿using Chirp.Razor;
+using Chirp.Razor;
 using Xunit;
 
 public class DbFacadeTests : IDisposable
