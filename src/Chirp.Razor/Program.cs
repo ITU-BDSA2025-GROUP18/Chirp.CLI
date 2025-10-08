@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Chirp.Razor;
 
 public abstract class Program
@@ -8,7 +10,11 @@ public abstract class Program
 
         // Add services to the container.
         builder.Services.AddRazorPages();
-        builder.Services.AddSingleton<ICheepService, CheepService>();
+        builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+
+        // Load database connection via configuration
+        string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+        builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
 
         var app = builder.Build();
 
