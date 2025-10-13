@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 
 public static class TestDb
 {
@@ -8,7 +8,13 @@ public static class TestDb
         using var conn = new SqliteConnection($"Data Source={path}");
         conn.Open();
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = "";
+        cmd.CommandText = @"
+CREATE TABLE user (
+  user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL,
+  email TEXT NOT NULL
+);
+";
         cmd.ExecuteNonQuery();
         return path;
     }
