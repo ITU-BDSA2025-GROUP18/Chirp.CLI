@@ -5,10 +5,10 @@ namespace Chirp.Razor.Pages;
 
 public class UserTimelineModel : PageModel
 {
-    private readonly ICheepRepository _repository;
+    private readonly ICheepQueryRepository _repository;
     public List<CheepDTO> Cheeps { get; set; }
 
-    public UserTimelineModel(ICheepRepository repository)
+    public UserTimelineModel(ICheepQueryRepository repository)
     {
         _repository = repository;
         Cheeps = new List<CheepDTO>();
