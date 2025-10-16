@@ -15,17 +15,17 @@ public class CheepDTO
 
 #nullable restore
 
-public interface ICheepRepository
+public interface ICheepQueryRepository
 {
     public Task<List<CheepDTO>> GetCheepsAsync(int page);
     public Task<List<CheepDTO>> GetCheepsFromAuthorAsync(string author, int page);
 }
 
-public class CheepRepository : ICheepRepository
+public class CheepQueryRepository : ICheepQueryRepository //Queries
 {
     private readonly ChirpDBContext _dbContext;
 
-    public CheepRepository(ChirpDBContext dbContext)
+    public CheepQueryRepository(ChirpDBContext dbContext)
     {
         _dbContext = dbContext;
     }
