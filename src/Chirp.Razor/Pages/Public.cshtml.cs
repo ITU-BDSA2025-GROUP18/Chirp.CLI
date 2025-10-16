@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chirp.Razor.Pages;
 
-public class PublicModel : PageModel
+public class PublicModel : PageModel //All queries
 {
     private readonly ICheepQueryRepository _repository;
     public List<CheepDTO> Cheeps { get; set; }
